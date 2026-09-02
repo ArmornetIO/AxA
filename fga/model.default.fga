@@ -1,0 +1,29 @@
+model
+  schema 1.1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Default authorization model for the identity gateway.
+#
+# This is the minimal RBAC baseline the gateway ships with so it boots and the
+# admin UI has something to render out-of-the-box. It is intentionally generic:
+# only the core identity vocabulary (users, organizations, and the platform
+# root) lives here — no application-specific object types.
+#
+# Consumers customize their RBAC by injecting their own compiled DSL via
+# fga.Config.ModelData; when that is empty, New() bootstraps the store with
+# this default.
+# ─────────────────────────────────────────────────────────────────────────────
+
+type user
+
+# The platform root. god_admin is the break-glass super-user relation.
+type platform
+  relations
+    define god_admin: [user]
+
+# A tenant. Members belong to it; admins and owners manage it.
+type organization
+  relations
+    define member: [user]
+    define admin: [user]
+    define owner: [user]
