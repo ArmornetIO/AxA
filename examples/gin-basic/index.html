@@ -1,0 +1,60 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>gin-basic</title>
+<main>
+  <h1>gin-basic</h1>
+  <p id="who">Checking session…</p>
+  <button id="signin" hidden>Sign in</button>
+  <button id="hello" hidden>GET /api/hello</button>
+  <button id="signout" hidden>Sign out</button>
+  <pre id="out"></pre>
+</main>
+<script type="module">
+  // The CSRF guard wants this header on every cookie-carrying mutation. A
+  // custom header forces a CORS preflight, which a cross-site form cannot pass.
+  const csrf = { "x-armornet-csrf": "1" };
+  const $ = (id) => document.getElementById(id);
+  const post = (path, body) =>
+    fetch(path, {
+      method: "POST",
+      credentials: "include",
+      headers: { ...csrf, "Content-Type": "application/json" },
+      body: body && JSON.stringify(body),
+    });
+
+  // Back from the issuer: trade the code for a session cookie, then drop the
+  // single-use code from the address bar.
+  const params = new URLSearchParams(location.search);
+  if (location.pathname === "/callback" && params.has("code")) {
+    const r = await post("/api/auth/callback", { code: params.get("code"), state: params.get("state") });
+    history.replaceState(null, "", "/");
+    if (!r.ok) $("out").textContent = `callback failed: ${r.status} ${await r.text()}`;
+  }
+
+  const s = await fetch("/api/auth/session", { credentials: "include" });
+  if (s.ok) {
+    const session = await s.json();
+    $("who").textContent = `Signed in as ${session.subject} (org ${session.org_id || "none"})`;
+    $("hello").hidden = $("signout").hidden = false;
+  } else {
+    $("who").textContent = "Signed out.";
+    $("signin").hidden = false;
+  }
+
+  $("signin").onclick = async () => {
+    // The one seeded workspace and its one connector. The custom-login
+    // example shows the real shape: type a workspace, pick a connector.
+    const { org_id, connectors } = await (await fetch("/api/orgs/demo/connectors")).json();
+    const r = await post("/api/auth/authorize", { org_id, connector_id: connectors[0].id });
+    if (!r.ok) return ($("out").textContent = `authorize failed: ${r.status} ${await r.text()}`);
+    location.href = (await r.json()).redirect_url;
+  };
+  $("hello").onclick = async () => {
+    const r = await fetch("/api/hello", { credentials: "include" });
+    $("out").textContent = `${r.status}\n${await r.text()}`;
+  };
+  $("signout").onclick = async () => {
+    await post("/api/auth/logout");
+    location.reload();
+  };
+</script>
