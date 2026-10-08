@@ -1,0 +1,60 @@
+model
+  schema 1.1
+
+type user
+
+type agent
+
+type organization
+  relations
+    define clearance_restricted: [user, agent]
+    define clearance_confidential: [user, agent] or clearance_restricted
+    define clearance_internal: [user, agent] or clearance_confidential
+    define clearance_public: [user, agent] or clearance_internal
+    define clearance_finance: [user, agent]
+    define clearance_legal: [user, agent]
+
+type document
+  relations
+    define org: [organization]
+    define viewer: [user:*, agent:*]
+    define editor: [user:*, agent:*]
+
+    define level_public: [organization]
+    define level_internal: [organization]
+    define level_confidential: [organization]
+    define level_restricted: [organization]
+    define compartment_finance: [organization]
+    define compartment_legal: [organization]
+
+    define owner_cleared_public: clearance_public from org
+    define owner_cleared_internal: clearance_internal from org
+    define owner_cleared_confidential: clearance_confidential from org
+    define owner_cleared_restricted: clearance_restricted from org
+    define owner_cleared_finance: clearance_finance from org
+    define owner_cleared_legal: clearance_legal from org
+
+    define mac_marked: clearance_public from level_public or clearance_public from level_internal or clearance_public from level_confidential or clearance_public from level_restricted
+    define mac_classified: mac_marked and owner_cleared_public
+
+    define blocked_internal: clearance_public from level_internal but not owner_cleared_internal
+    define blocked_confidential: clearance_public from level_confidential but not owner_cleared_confidential
+    define blocked_restricted: clearance_public from level_restricted but not owner_cleared_restricted
+    define blocked_finance: clearance_public from compartment_finance but not owner_cleared_finance
+    define blocked_legal: clearance_public from compartment_legal but not owner_cleared_legal
+    define mac_read_blocked: blocked_internal or blocked_confidential or blocked_restricted or blocked_finance or blocked_legal
+
+    define write_blocked_public: clearance_internal from level_public
+    define write_blocked_internal: clearance_confidential from level_internal
+    define write_blocked_confidential: clearance_restricted from level_confidential
+    define in_finance: clearance_finance from compartment_finance and owner_cleared_finance
+    define in_legal: clearance_legal from compartment_legal and owner_cleared_legal
+    define write_blocked_finance: owner_cleared_finance but not in_finance
+    define write_blocked_legal: owner_cleared_legal but not in_legal
+    define mac_write_blocked: write_blocked_public or write_blocked_internal or write_blocked_confidential or write_blocked_finance or write_blocked_legal
+
+    define read_grants: viewer or editor
+    define read_guarded: read_grants and mac_classified
+    define read: read_guarded but not mac_read_blocked
+    define write_guarded: editor and mac_classified
+    define write: write_guarded but not mac_write_blocked
