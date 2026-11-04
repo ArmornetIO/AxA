@@ -1,0 +1,25 @@
+# Runs in the public identity repo; armornet's own Actions never run it
+# (armornet tests these modules with `make test-go-identity`).
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version-file: go.mod
+      # Each module has its own go.mod, so one `./...` never reaches the rest.
+      - run: |
+          for m in . authn authz ginauthz examples/gin-basic; do
+            (cd "$m" && go vet ./... && go test -race -count=1 ./...)
+          done
