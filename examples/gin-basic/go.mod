@@ -78,7 +78,6 @@ require (
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
 	github.com/jonboulle/clockwork v0.5.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.20.2 // indirect
 	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
 	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect
@@ -160,11 +159,6 @@ require (
 // directives do not carry over from a dependency, so identity's own are
 // repeated here. Outside this repo, delete all of them and require a tagged
 // identity release instead.
-replace (
-	github.com/ArmornetIO/ota => ../../../ota
-	github.com/ArmornetIO/ota/lifecycle => ../../../ota/lifecycle
-	github.com/ArmornetIO/ota/service => ../../../ota/service
-)
 
 replace github.com/ArmornetIO/identity => ../..
 

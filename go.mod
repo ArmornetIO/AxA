@@ -145,11 +145,6 @@ require (
 )
 
 // Health reporting (ours and the Dex fork's) comes from ota/health.
-replace (
-	github.com/ArmornetIO/ota => ../ota
-	github.com/ArmornetIO/ota/lifecycle => ../ota/lifecycle
-	github.com/ArmornetIO/ota/service => ../ota/service
-)
 
 replace github.com/ArmornetIO/identity/authn => ./authn
 
