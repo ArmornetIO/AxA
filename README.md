@@ -2,52 +2,43 @@
 
 **Agent x Anything Authentication: one Go library that signs in people, agents and outsiders, and decides what each may touch.**
 
-The caller on the other end of a request is no longer always a person. AxA
-authenticates all of them in one chain and authorizes them in one place:
+The caller on the other end of an API request is no longer just a person. AxA
+authenticates everything in one chain and authorizes it all in one place:
 
-- **People** sign in through the IdP they already use. An embedded Dex
-  brokers upstream OIDC, SAML and LDAP, with TOTP and WebAuthn as a second
-  factor.
-- **Agents** carry credentials the service issues itself: agent tokens,
-  personal access tokens and the OAuth `client_credentials` grant.
-- **Outsiders**, such as a vendor filling in one questionnaire, get a
-  single-use magic link scoped to one object, never an account.
-- **Every one of them** ends up as the same `Claims`, and one OpenFGA
-  relationship check decides access.
+- **People** sign in through the IdP they already use: an embedded Dex brokers
+  OIDC, SAML and LDAP, with TOTP and WebAuthn as a second factor.
+- **Agents** carry credentials the service issues itself: personal access
+  tokens, agent tokens and the OAuth `client_credentials` grant.
+- **Outsiders**, like a vendor filling in a single form, get a single-use magic
+  link scoped to one object, never an account.
+- **Everyone** ends up as the same `Claims`, and a single OpenFGA relationship
+  check decides their access.
 
-<img src="docs/scenes/axa-principals.gif" width="100%" alt="A person signs in through SAML, an agent with its token, and a vendor with a magic link that is then spent; one OpenFGA check allows the person and the agent and denies the vendor an object it was not given">
+<img src="docs/scenes/axa-broker.gif" width="100%" alt="AxA brokers identity: people sign in through their own organisation's identity provider (OIDC, SAML or LDAP), agents with their own credential or a token from their IdP, and an outsider with a single-use link. Each becomes one subject, OpenFGA decides what it may touch, and the service that asked enforces it. The decision log shows the latest verdicts; the outsider is denied an object its link was not scoped to">
 
-It is what [Armornet](https://armornet.io) runs, as a library: **issue**
-identity, **relate** principals to resources, **enforce** access. Module
-`github.com/ArmornetIO/axa`. Your application imports it; it never imports
-yours. Persistence, delivery and domain decisions are interfaces you implement.
+AxA is built to be embedded. Your application imports `github.com/ArmornetIO/axa`;
+it never imports yours.
 
 ## Status
 
-Alpha, versioned `0.0.x`: no compatibility promise between releases, so pin an
-exact version. What holds regardless is what the tests enforce: `authn` and
-`authz` import nothing else from this module (`TestLayering`), a recognised but
-invalid credential never falls through to a weaker one, and stored client
-secrets are argon2id hashes.
-
-The embedded Dex is a fork of Dex v2.45.1 in `internal/dex`: it adds token
-revocation, RP-initiated and back-channel logout, the `client_credentials`
-grant, hashed client secrets and sealed claims at rest. Each change is marked
-`ARMORNET FORK`.
+**Alpha (`0.0.x`).** There is no compatibility promise between releases yet, so
+pin an exact version in your `go.mod`. The core security invariants are tested:
+a recognised but invalid credential never falls through to a weaker one, and
+client secrets are always stored as argon2id hashes.
 
 ## Quick start
 
-[`examples/gin-basic`](examples/gin-basic) is a Gin API behind AxA's browser
-sign-in, in one process with one Postgres. Dex's mock connector stands in for
-a real IdP:
+The fastest way to see AxA working is [`examples/gin-basic`](examples/gin-basic):
+a Gin API behind AxA's browser sign-in, using one Postgres and a mock IdP.
 
 ```sh
 cd examples/gin-basic
 docker compose up -d          # Postgres on :5433
-go run .                      # http://localhost:8081
+go run .                      # the API on http://localhost:8081
 ```
 
-`main.go` is the whole wiring. "Behind our auth" is one middleware:
+Its whole guard is a ten-line `requireSession` middleware over AxA's session
+lookup, and a protected route reads the signed-in principal from it:
 
 ```go
 api := r.Group("/api", requireSession(auth))
@@ -57,155 +48,36 @@ api.GET("/hello", func(c *gin.Context) {
 })
 ```
 
-[`examples/custom-login`](examples/custom-login) puts a designed login page
-over the same flow with the browser client in [`ts/`](ts).
+Need your own UI? [`examples/custom-login`](examples/custom-login) puts a
+designed login page over the same flow.
 
-## Design rule
+## Design: seams and state
 
-**The module defines seams; the host implements them.** Persistence, delivery,
-and domain decisions are reached only through the interfaces defined in each
-package (e.g. `PATLookup`, `MagicLinkStore`, `Notifier`, `Resolver`). Domain
-logic that names a host's own concepts stays in the host.
+**The module defines seams; the host implements them.** AxA handles the state
+machines of authentication and authorization. Persistence, delivery (such as
+sending email) and your domain decisions are interfaces you implement, such as
+`PATLookup`, `MagicLinkStore` and `Notifier`.
 
-## Layout
+**You own the database.** AxA ships a Postgres store (`pgstore`), but it never
+migrates or takes over your database:
 
-| Path | What it owns |
-|------|--------------|
-| `broker.go`, `clients.go`, `connectors.go` | Root contracts: `Broker`, `ClientStore`, `ConnectorStore`/`Connector` (upstream IdP CRUD, backend-agnostic). |
-| `authn/` | Request authentication: `Claims`, `Authenticator`, and `Service`, the ordered chain (below). Credentials the host itself issues & verifies — **not** federated OIDC: `AgentTokenProvider`, `PATProvider`, `MagicLinkProvider`. `token.go` (`GenerateToken`, prefixes), `scopes.go`. |
-| `authz/` | Authorization: `Service` (the `access` decision pipeline assembled from host ports), `Grapher` (Checker → graph axis), `Checker`, `Tuple`, mapper, `FGAClientIface`. Tenant-agnostic (tenancy is a host boundary). |
-| `access/` | Composes `authn` and `authz` into one decision per request, plus short-lived signed assertions for a proxy to check. |
-| `dex/` | The embedded Dex broker, configured by a `Config` struct (DB URL, connectors, hasher injected — no env reads except the secrets seam). |
-| `fga/` | OpenFGA server/client wiring. |
-| `ginauthz/` | Gin middleware adapter for the checker. |
-| `authn/secrethash/` | argon2id token hashing (`HashToken`/`VerifyToken`) + params. |
-| `pgstore/` | Postgres implementations of AxA-owned persistence seams (see below). Uses a **host-injected** `*sql.DB`; imports no driver. |
-| `service/` | Assembly/health entry points. |
-| `web/` | The browser sign-in flow: `/api/auth/*` (authorize, callback, session, logout, back-channel logout, MFA) over the `authn` stores. Plain `net/http`: `Handler()` for a mux, `Routes()` for a router that registers per pattern. `ts/` is its browser client. |
-| `examples/` | [`gin-basic`](examples/gin-basic) — a Gin API behind this sign-in, runnable against one Postgres. [`custom-login`](examples/custom-login) — a designed login UI over `ts/`. |
-| `internal/dex/` | The Dex fork. Upstream code except where marked `ARMORNET FORK`. |
+- You pass in an opened `*sql.DB`.
+- `pgstore.Schema()`, `dex.Schema()` and `fga.Schema()` return the reference DDL.
+- You fold those tables into your own migration pipeline.
 
-## The credential chain (`authn/`)
+So your own tables, such as `tenants` or `workspaces`, can reference AxA's
+`users` and `organizations` with ordinary foreign keys.
 
-<img src="docs/scenes/axa-chain.gif" width="100%" alt="A request with a valid PAT passes the agent-token authenticator and is answered by the PAT authenticator; a request with a revoked PAT is stopped at the PAT with a 401 and the session cookie is never consulted">
+## Development
 
-Every authenticator implements `Authenticator`:
-`Authenticate(ctx, r) (Claims, error)`. You list them, most privileged first,
-in an `authn.Service`:
-
-```go
-svc := &authn.Service{Authenticators: []authn.Authenticator{
-	agentTokens, // anet_agent_…
-	pats,        // anet_user_…
-	sessions,    // __Host-session cookie
-}}
-claims, err := svc.Authenticate(ctx, r)
-```
-
-An authenticator returns `ErrNoCredential` for a request it does not
-recognise, and the chain tries the next. Once it recognises its credential,
-any rejection is final: a revoked PAT never falls through to the session
-cookie riding on the same request. The zero `Service` authenticates nobody.
-Persistence is a seam you fill.
-
-### PAT — `authn/pat.go`
-Personal access tokens (`anet_user_` / `anet_agent_` prefixes), argon2id-hashed,
-prefix-narrowed lookup via the host's `PATLookup`.
-
-### Magic link — `authn/magiclink.go`
-Short-lived, **single-use, scoped** access links for a third party (e.g. a vendor
-filling out an assessment) who can't do federated login. **Not** a general
-passwordless fallback — it grants scoped access to one object, enforced by FGA.
-
-- **`MagicLinkProvider`** — `Request(ctx, email)` (resolve → mint token → persist
-  hash → deliver; **enumeration-safe**: unknown emails send nothing) and
-  `Redeem(ctx, token)` (verify → atomic single-use consume → return `Grant`).
-  Token prefix `anet_magic_`; default TTL 15m.
-- **`Grant{Subject, OrgID, ObjectType, ObjectID, Relation}`** — opaque to the
-  module. The host interprets it: write an FGA tuple `Relation` on
-  `ObjectType:ObjectID` for `Subject`, then mint a scoped session. `Subject` is a
-  host-minted principal id, **never** an email.
-- **Seams the host implements:**
-  - `Notifier` — delivery. The module builds the token + link; the host chooses
-    the channel.
-  - `Resolver` — domain. Given an email, does it map to a scoped `Grant`? The
-    module has no concept of assessments or assignees — the host answers.
-  - `MagicLinkStore` — persistence (`Create` / `ByPrefix` / atomic `Consume`).
-- **`pgstore.MagicLinkStore`** — the Postgres implementation of `MagicLinkStore`
-  over the AxA-owned `magic_link` table (host injects `*sql.DB`).
-
-## Schema: AxA owns the code, you own the tables
-
-`pgstore` takes an opened `*sql.DB` and runs queries. It never migrates, and
-there is no migrator in this module. Creating and versioning the tables below is
-the host's job.
-
-That split is deliberate rather than unfinished. A library that reshapes a
-database it was handed fights whatever the host already uses to manage schema —
-which is why the embedded Dex and OpenFGA run with their own migrators
-disabled, and a host applies their tables through its own migrations instead.
-AxA follows the same rule for its own tables.
-
-| Table | Used by |
-|---|---|
-| `users` | `pgstore.UserStore` → `authn.UserStore` |
-| `organizations` | `pgstore.OrgStore` → `authn.OrgStore` |
-| `organization_users` | `pgstore.UserStore` → `authn.UserStore` |
-| `sessions` | `pgstore.SessionStore` → `authn.SessionStore` |
-| `magic_link` | `pgstore.MagicLinkStore` → `authn.MagicLinkStore` |
-| `personal_access_tokens` | `pgstore.PATStore` → `authn.PATStore` (and `authn.PATLookup`) |
-| `preauth_sessions` | `pgstore.PreAuthStore` → `authn.PreAuthStore` |
-| `mfa_challenges` | `pgstore.MFAChallengeStore` → `authn.MFAChallengeStore` |
-| `user_totp_credentials` | `pgstore.TOTPStore` → `authn.TOTPStore` |
-| `webauthn_credentials` | `pgstore.WebAuthnCredentialStore` → `authn.WebAuthnCredentialStore` |
-| `webauthn_sessions` | `pgstore.WebAuthnSessionStore` → `authn.WebAuthnSessionStore` |
-| `invite_kinds`, `org_invites`, `org_invite_parties` | `pgstore.InviteStore` → `authn.InviteStore` |
-| `org_domain_allowlist` | `pgstore.DomainAllowlistStore` → `authn.DomainAllowlistStore` |
-| `legal_document_kinds`, `legal_documents`, `legal_document_versions`, `legal_acceptance` | `pgstore.LegalStore` → `authn.LegalStore` |
-
-A host's own tables may carry foreign keys into `users` and `organizations`.
-That is expected: AxA owns the definition, the
-host applies it into the host's database, and the tables sit alongside each
-other. What AxA must not acquire is the reverse — a reference from these
-tables out into anything a host defines.
-
-`pgstore.Schema()` returns the reference DDL ([`pgstore/schema.sql`](pgstore/schema.sql))
-so a host can execute it, diff against it, or fold it into its own migrations.
-`dex.Schema()` and `fga.Schema()` do the same for the embedded Dex and OpenFGA
-tables, whose own migrators are disabled — without them a fresh database has
-nowhere for either engine to write.
-Every statement is `IF NOT EXISTS`, so running it is safe — but it will not
-upgrade a table that already exists in an older shape.
-
-Two things a host should know before wiring these up:
-
-- **`org_id` is opaque here.** AxA treats it as a scoping string and
-  nothing more. A host may point a foreign key at its own tenant table.
-  Nothing in this module requires that, and `sessions.org_id` is nullable
-  because a session can legitimately exist before its owner belongs to anything.
-- **Encryption is yours.** The upstream tokens on a session are `bytea` and are
-  sealed by an `authn.Encrypter` the host supplies, because the key is the
-  host's. Supply none and they are stored as-is.
-
-## Develop
-
-`authn`, `authz` and `ginauthz` are modules of their own, so `./...` from the
-root does not reach them:
+AxA is split into several modules (`authn`, `authz`, `ginauthz`), so `./...`
+from the root doesn't reach them all. To vet and test everything:
 
 ```sh
 for m in . authn authz ginauthz; do (cd $m && go vet ./... && go test ./...); done
 ```
 
-The LDAP connector's tests need an LDAP server and skip without one.
+## Security and license
 
-## Security
-
-Report a vulnerability privately: see [SECURITY.md](SECURITY.md).
-
-The GIFs in this README are scenes from
-[Showcase](https://github.com/ArmornetIO/showcase), filmed frame by frame by its
-`npm run record:scenes`.
-
-## License
-
-[Apache-2.0](LICENSE)
+- **Security:** to report a vulnerability privately, see [SECURITY.md](SECURITY.md).
+- **License:** [Apache-2.0](LICENSE).
