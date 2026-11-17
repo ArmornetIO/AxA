@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ArmornetIO/identity/authn"
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
-	entclient "github.com/ArmornetIO/identity/internal/dex/storage/ent/client"
+	"github.com/ArmornetIO/axa/authn"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
+	entclient "github.com/ArmornetIO/axa/internal/dex/storage/ent/client"
 )
 
 // fakeDeviceStorage records what reaches the columns: that, not the round trip,

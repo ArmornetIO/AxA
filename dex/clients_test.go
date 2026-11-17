@@ -6,8 +6,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/ArmornetIO/identity"
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 // fakeStorage fakes the client half; the embedded nil interface panics on the
@@ -67,7 +67,7 @@ func newTestStore() (*clientStore, *fakeStorage) {
 
 func TestCreate_ReturnsSecretAndPersistsIt(t *testing.T) {
 	s, fs := newTestStore()
-	secret, err := s.Create(context.Background(), identity.Client{ID: "agent:org1:abc", Name: "probe"})
+	secret, err := s.Create(context.Background(), axa.Client{ID: "agent:org1:abc", Name: "probe"})
 	if err != nil {
 		t.Fatalf("Create: %v", err)
 	}
@@ -81,19 +81,19 @@ func TestCreate_ReturnsSecretAndPersistsIt(t *testing.T) {
 
 func TestCreate_DuplicateIsErrClientExists(t *testing.T) {
 	s, _ := newTestStore()
-	c := identity.Client{ID: "agent:org1:abc"}
+	c := axa.Client{ID: "agent:org1:abc"}
 	if _, err := s.Create(context.Background(), c); err != nil {
 		t.Fatalf("first Create: %v", err)
 	}
 	_, err := s.Create(context.Background(), c)
-	if !errors.Is(err, identity.ErrClientExists) {
+	if !errors.Is(err, axa.ErrClientExists) {
 		t.Errorf("second Create err = %v, want ErrClientExists", err)
 	}
 }
 
 func TestGet_NeverReturnsTheSecret(t *testing.T) {
 	s, _ := newTestStore()
-	if _, err := s.Create(context.Background(), identity.Client{ID: "agent:org1:abc", Name: "probe"}); err != nil {
+	if _, err := s.Create(context.Background(), axa.Client{ID: "agent:org1:abc", Name: "probe"}); err != nil {
 		t.Fatalf("Create: %v", err)
 	}
 	got, err := s.Get(context.Background(), "agent:org1:abc")
@@ -103,7 +103,7 @@ func TestGet_NeverReturnsTheSecret(t *testing.T) {
 	if got.Name != "probe" {
 		t.Errorf("Name = %q, want %q", got.Name, "probe")
 	}
-	// identity.Client has no Secret field at all — the write-once guarantee is
+	// axa.Client has no Secret field at all — the write-once guarantee is
 	// structural. This asserts the rest of the record still round-trips.
 	if got.ID != "agent:org1:abc" {
 		t.Errorf("ID = %q, want %q", got.ID, "agent:org1:abc")
@@ -113,18 +113,18 @@ func TestGet_NeverReturnsTheSecret(t *testing.T) {
 func TestGet_UnknownIsErrClientNotFound(t *testing.T) {
 	s, _ := newTestStore()
 	_, err := s.Get(context.Background(), "agent:org1:nope")
-	if !errors.Is(err, identity.ErrClientNotFound) {
+	if !errors.Is(err, axa.ErrClientNotFound) {
 		t.Errorf("Get err = %v, want ErrClientNotFound", err)
 	}
 }
 
 func TestUpdate_LeavesSecretIntact(t *testing.T) {
 	s, fs := newTestStore()
-	secret, err := s.Create(context.Background(), identity.Client{ID: "agent:org1:abc", Name: "before"})
+	secret, err := s.Create(context.Background(), axa.Client{ID: "agent:org1:abc", Name: "before"})
 	if err != nil {
 		t.Fatalf("Create: %v", err)
 	}
-	err = s.Update(context.Background(), identity.Client{
+	err = s.Update(context.Background(), axa.Client{
 		ID:           "agent:org1:abc",
 		Name:         "after",
 		RedirectURIs: []string{"https://app.example/cb"},
@@ -143,15 +143,15 @@ func TestUpdate_LeavesSecretIntact(t *testing.T) {
 
 func TestUpdate_UnknownIsErrClientNotFound(t *testing.T) {
 	s, _ := newTestStore()
-	err := s.Update(context.Background(), identity.Client{ID: "agent:org1:nope"})
-	if !errors.Is(err, identity.ErrClientNotFound) {
+	err := s.Update(context.Background(), axa.Client{ID: "agent:org1:nope"})
+	if !errors.Is(err, axa.ErrClientNotFound) {
 		t.Errorf("Update err = %v, want ErrClientNotFound", err)
 	}
 }
 
 func TestRotateSecret_ReplacesSecretAndKeepsIdentity(t *testing.T) {
 	s, fs := newTestStore()
-	original, err := s.Create(context.Background(), identity.Client{
+	original, err := s.Create(context.Background(), axa.Client{
 		ID:           "agent:org1:abc",
 		Name:         "probe",
 		RedirectURIs: []string{"https://app.example/cb"},
@@ -185,7 +185,7 @@ func TestRotateSecret_ReplacesSecretAndKeepsIdentity(t *testing.T) {
 func TestRotateSecret_UnknownIsErrClientNotFound(t *testing.T) {
 	s, _ := newTestStore()
 	_, err := s.RotateSecret(context.Background(), "agent:org1:nope")
-	if !errors.Is(err, identity.ErrClientNotFound) {
+	if !errors.Is(err, axa.ErrClientNotFound) {
 		t.Errorf("RotateSecret err = %v, want ErrClientNotFound", err)
 	}
 }
@@ -193,7 +193,7 @@ func TestRotateSecret_UnknownIsErrClientNotFound(t *testing.T) {
 func TestDelete_UnknownIsErrClientNotFound(t *testing.T) {
 	s, _ := newTestStore()
 	err := s.Delete(context.Background(), "agent:org1:nope")
-	if !errors.Is(err, identity.ErrClientNotFound) {
+	if !errors.Is(err, axa.ErrClientNotFound) {
 		t.Errorf("Delete err = %v, want ErrClientNotFound", err)
 	}
 }

@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ArmornetIO/identity/authn"
+	"github.com/ArmornetIO/axa/authn"
 )
 
 // LegalStore never filters on org (operator terms; the guard is user_id). ABSENCE

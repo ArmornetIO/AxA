@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector"
+	"github.com/ArmornetIO/axa/internal/dex/connector"
 )
 
 // NewCallbackConnector returns a mock connector which requires no user interaction. It always returns

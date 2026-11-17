@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"google.golang.org/protobuf/types/known/structpb"
 
-	"github.com/ArmornetIO/identity/authz/internal/fgatest"
+	"github.com/ArmornetIO/axa/authz/internal/fgatest"
 )
 
 // The three list-shaped rules, as R8 renders them. Each is measured at its

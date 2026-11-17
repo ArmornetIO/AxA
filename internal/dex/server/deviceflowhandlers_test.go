@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 func TestDeviceVerificationURI(t *testing.T) {

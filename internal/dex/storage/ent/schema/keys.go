@@ -5,7 +5,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/go-jose/go-jose/v4"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 /* Original SQL table:

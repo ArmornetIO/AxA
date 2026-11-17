@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ArmornetIO/identity"
+	"github.com/ArmornetIO/axa"
 )
 
 // A device code's sign-in is Dex's own: it proves an upstream account and
@@ -44,7 +44,7 @@ type approverKey struct{}
 
 type deviceGate struct {
 	approver func(*http.Request) string
-	sealer   identity.ConfigSealer
+	sealer   axa.ConfigSealer
 	secure   bool
 	spa      bool
 	now      func() time.Time

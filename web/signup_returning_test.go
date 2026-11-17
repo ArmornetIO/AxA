@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ArmornetIO/identity/authn"
+	"github.com/ArmornetIO/axa/authn"
 )
 
 // /login offers the global providers through signup, so a signup callback for

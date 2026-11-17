@@ -6,12 +6,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ArmornetIO/identity"
+	"github.com/ArmornetIO/axa"
 )
 
 // SecretResolver resolves a SecretRef to its plaintext value at write time.
 type SecretResolver interface {
-	Resolve(ctx context.Context, ref identity.SecretRef) (string, error)
+	Resolve(ctx context.Context, ref axa.SecretRef) (string, error)
 }
 
 // newSecretResolver reads env vars; embedded Dex resolves no Kubernetes Secrets.
@@ -23,7 +23,7 @@ func newSecretResolver() SecretResolver {
 // {Name:"auth0", Key:"clientSecret"} is AUTH0_CLIENTSECRET.
 type envSecretResolver struct{}
 
-func (r *envSecretResolver) Resolve(_ context.Context, ref identity.SecretRef) (string, error) {
+func (r *envSecretResolver) Resolve(_ context.Context, ref axa.SecretRef) (string, error) {
 	key := strings.ToUpper(strings.ReplaceAll(ref.Name+"_"+ref.Key, "-", "_"))
 	val := os.Getenv(key)
 	if val == "" {

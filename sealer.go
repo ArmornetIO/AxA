@@ -1,4 +1,4 @@
-package identity
+package axa
 
 // ConfigSealer encrypts state that must be recoverable at rest (connector
 // credentials replayed on every login, decisions, device codes). The host

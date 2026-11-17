@@ -7,9 +7,9 @@ package abac_test
 import (
 	"fmt"
 
-	"github.com/ArmornetIO/identity/authz/abac"
-	"github.com/ArmornetIO/identity/authz/model"
-	"github.com/ArmornetIO/identity/authz/rbac"
+	"github.com/ArmornetIO/axa/authz/abac"
+	"github.com/ArmornetIO/axa/authz/model"
+	"github.com/ArmornetIO/axa/authz/rbac"
 )
 
 type DocID string

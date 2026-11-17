@@ -1,8 +1,8 @@
 # custom-login
 
-A designed sign-in experience on top of identity's browser client
-([`identity/ts`](../../ts)): type a workspace, pick an identity provider, land
-signed in. Every server call comes from `identity`; what is here is the part a
+A designed sign-in experience on top of AxA's browser client
+([`axa/ts`](../../ts)): type a workspace, pick an identity provider, land
+signed in. Every server call comes from `axa`; what is here is the part a
 product owns — the components and the look.
 
 | File | What it is |
@@ -12,7 +12,7 @@ product owns — the components and the look.
 | `src/components/ConnectorPicker.ts` | one button per provider; skipped when there is only one |
 | `src/components/SessionCard.ts` | who you are, a protected API call, sign-out |
 | `src/style.css` | the look |
-| `vite.config.js` | the `identity` alias and a proxy to the backend |
+| `vite.config.js` | the `axa` alias and a proxy to the backend |
 
 No framework: components are functions that return an element, data in and
 callbacks out. The same functions port to Svelte or React one-for-one.
@@ -33,10 +33,10 @@ cd ../custom-login && npm install && npm run dev
 
 Open http://localhost:5174 and sign in to the `demo` workspace.
 
-## How it consumes identity
+## How it consumes AxA
 
-`identity/ts` is aliased as raw source, not installed — see its README. The
+`axa/ts` is aliased as raw source, not installed — see its README. The
 alias lives in `vite.config.js` (bundling) and `tsconfig.json` (types).
-`identity` exports `setIdentityBaseUrl` for a page served from a different
+`axa` exports `setIdentityBaseUrl` for a page served from a different
 origin than the API, and `setCSRFHeader` if your server names its CSRF header
 differently.

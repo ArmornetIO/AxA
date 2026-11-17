@@ -1,4 +1,4 @@
-module github.com/ArmornetIO/identity/ginauthz
+module github.com/ArmornetIO/axa/ginauthz
 
 go 1.27.4
 

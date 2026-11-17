@@ -7,8 +7,8 @@ package mac_test
 import (
 	"fmt"
 
-	"github.com/ArmornetIO/identity/authz/mac"
-	"github.com/ArmornetIO/identity/authz/model"
+	"github.com/ArmornetIO/axa/authz/mac"
+	"github.com/ArmornetIO/axa/authz/model"
 )
 
 // Typed mac.Level and mac.Compartment constants (<Type><Value>, O19): a

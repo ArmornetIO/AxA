@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/ArmornetIO/identity"
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 // CLIClientID authenticates a HUMAN by device grant (RFC 8628); agents are
@@ -22,7 +22,7 @@ type CLIClientSeeder struct{}
 
 func (CLIClientSeeder) Name() string { return "cli-client" }
 
-func (CLIClientSeeder) Seed(ctx context.Context, b identity.Broker) error {
+func (CLIClientSeeder) Seed(ctx context.Context, b axa.Broker) error {
 	bk, ok := b.(*broker)
 	if !ok {
 		return fmt.Errorf("dex: CLIClientSeeder requires *broker, got %T", b)

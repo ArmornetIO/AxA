@@ -1,6 +1,6 @@
-# identity/authz
+# axa/authz
 
-Go module `github.com/ArmornetIO/identity/authz`. Apache 2.0.
+Go module `github.com/ArmornetIO/axa/authz`. Apache 2.0.
 
 - `authz`: a checker that asks OpenFGA whether a subject holds a relation on an
   object, turning sign-in groups into contextual tuples on the way.

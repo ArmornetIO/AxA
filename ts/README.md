@@ -1,4 +1,4 @@
-# identity/ts — TypeScript client for the identity service
+# axa/ts — TypeScript client for AxA
 
 The browser-side client for the endpoints this Go module serves: session and
 sign-in flows, org connectors, invites, and personal access tokens.
@@ -17,13 +17,13 @@ the files as if they were its own:
 ```js
 // svelte.config.js
 alias: {
-  identity: path.resolve(__dirname, '../identity/ts'),
-  'identity/*': path.resolve(__dirname, '../identity/ts/*')
+  axa: path.resolve(__dirname, '../axa/ts'),
+  'axa/*': path.resolve(__dirname, '../axa/ts/*')
 }
 ```
 
 ```ts
-import { getSession, listInvites } from 'identity';
+import { getSession, listInvites } from 'axa';
 ```
 
 Because the source is compiled by the host, every import in these files must
@@ -55,7 +55,7 @@ here rather than imported across the boundary, for the same reason.
 All of it is optional, and all of it is set once at host boot.
 
 ```ts
-import { setIdentityBaseUrl, setCSRFHeader, setTransportHooks } from 'identity';
+import { setIdentityBaseUrl, setCSRFHeader, setTransportHooks } from 'axa';
 
 // Empty (the default) = same-origin. Set this only for a cross-origin consumer.
 setIdentityBaseUrl('https://app.example.com');
@@ -91,7 +91,7 @@ const s = await getSession<AppSession>();
 ```
 
 The response is passed through untouched, so the extra fields arrive and stay
-fully typed at the host's call sites — without identity having to know what an
+fully typed at the host's call sites — without AxA having to know what an
 agent limit is.
 
 ## What is deliberately NOT here
@@ -99,11 +99,11 @@ agent limit is.
 - **UI.** No components, no screens, no stores. The sign-in page, the invite
   table, the token drawer all stay in the host. This is a client, not a product.
 - **Host product clients.** Anything whose types are the product's rather than
-  identity's — Armornet's agents, risks, vendors, findings, and its legal
+  AxA's — Armornet's agents, risks, vendors, findings, and its legal
   acceptance flow.
 - **Org administration beyond connectors.** Org rename and the email-domain
   allowlist are the host's admin surface today; they stay with it until they are
-  shown to be identity's.
+  shown to be AxA's.
 - **A build step.** No `package.json`, no `dist/`, no publish. The host compiles
   the source. If this ever ships to npm, that is a build added around these
   files, not a change to them.

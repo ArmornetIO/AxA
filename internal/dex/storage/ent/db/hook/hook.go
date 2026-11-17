@@ -6,7 +6,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db"
 )
 
 // The AuthCodeFunc type is an adapter to allow the use of ordinary

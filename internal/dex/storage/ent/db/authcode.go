@@ -10,7 +10,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/authcode"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/authcode"
 )
 
 // AuthCode is the model entity for the AuthCode schema.

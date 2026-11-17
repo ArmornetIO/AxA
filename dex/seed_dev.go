@@ -5,15 +5,15 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ArmornetIO/identity"
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 // SeedClient writes a confidential client under a secret the caller fixes, so
 // a local config can carry it. A fixed secret is a dev convenience: gate the
 // call on the host's dev mode. An existing client is left as it is.
-func SeedClient(id, secret, name string) identity.SeedFunc {
-	return func(ctx context.Context, b identity.Broker) error {
+func SeedClient(id, secret, name string) axa.SeedFunc {
+	return func(ctx context.Context, b axa.Broker) error {
 		bk, ok := b.(*broker)
 		if !ok {
 			return fmt.Errorf("dex: SeedClient requires *broker, got %T", b)

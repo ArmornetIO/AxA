@@ -1,12 +1,12 @@
-module github.com/ArmornetIO/identity
+module github.com/ArmornetIO/axa
 
 go 1.27.4
 
 require (
 	cloud.google.com/go/compute/metadata v0.9.0
 	entgo.io/ent v0.14.5
-	github.com/ArmornetIO/identity/authn v0.0.1
-	github.com/ArmornetIO/identity/authz v0.0.1
+	github.com/ArmornetIO/axa/authn v0.0.1
+	github.com/ArmornetIO/axa/authz v0.0.1
 	github.com/ArmornetIO/ota v0.0.1
 	github.com/Masterminds/sprig/v3 v3.3.0
 	github.com/beevik/etree v1.6.0
@@ -149,6 +149,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/ArmornetIO/identity/authn => ./authn
+replace github.com/ArmornetIO/axa/authn => ./authn
 
-replace github.com/ArmornetIO/identity/authz => ./authz
+replace github.com/ArmornetIO/axa/authz => ./authz

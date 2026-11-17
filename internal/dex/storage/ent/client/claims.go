@@ -1,6 +1,6 @@
 package client
 
-import "github.com/ArmornetIO/identity/internal/dex/storage"
+import "github.com/ArmornetIO/axa/internal/dex/storage"
 
 // ARMORNET FORK: claims.Email is sealed at rest.
 //

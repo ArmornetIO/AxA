@@ -20,10 +20,10 @@ import (
 
 	"github.com/go-jose/go-jose/v4"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector"
-	"github.com/ArmornetIO/identity/internal/dex/server/internal"
-	"github.com/ArmornetIO/identity/internal/dex/server/signer"
-	"github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/connector"
+	"github.com/ArmornetIO/axa/internal/dex/server/internal"
+	"github.com/ArmornetIO/axa/internal/dex/server/signer"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 // TODO(ericchiang): clean this file up and figure out more idiomatic error handling.

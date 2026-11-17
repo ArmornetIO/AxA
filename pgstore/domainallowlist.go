@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ArmornetIO/identity/authn"
+	"github.com/ArmornetIO/axa/authn"
 )
 
 // DomainAllowlistStore implements authn.DomainAllowlistStore over the

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/authrequest"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/authrequest"
 )
 
 // CreateAuthRequest saves provided auth request into the database.

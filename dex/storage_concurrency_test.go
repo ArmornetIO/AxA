@@ -10,7 +10,7 @@ import (
 
 	"github.com/google/uuid"
 
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 // Concurrent sign-ins must not fail each other. Storage transactions are

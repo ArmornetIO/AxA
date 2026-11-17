@@ -8,7 +8,7 @@ import (
 
 	"github.com/lib/pq"
 
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 // maxTxAttempts bounds the retries. Sixty-four sign-ins landing at once all

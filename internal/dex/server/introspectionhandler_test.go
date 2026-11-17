@@ -14,8 +14,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/ArmornetIO/identity/internal/dex/server/internal"
-	"github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/server/internal"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 func toJSON(a interface{}) string {

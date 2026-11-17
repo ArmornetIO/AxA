@@ -1,7 +1,8 @@
 # CLAUDE.md
 
-A self-hostable identity broker for Go services. README.md explains the design;
-these are the rules that cause real bugs when broken.
+AxA (Agent x Anything Authentication): a self-hostable identity broker for Go
+services. README.md explains the design; these are the rules that cause real
+bugs when broken.
 
 ## Rules
 

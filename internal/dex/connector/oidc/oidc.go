@@ -16,9 +16,9 @@ import (
 	"github.com/coreos/go-oidc/v3/oidc"
 	"golang.org/x/oauth2"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector"
-	groups_pkg "github.com/ArmornetIO/identity/internal/dex/pkg/groups"
-	"github.com/ArmornetIO/identity/internal/dex/pkg/httpclient"
+	"github.com/ArmornetIO/axa/internal/dex/connector"
+	groups_pkg "github.com/ArmornetIO/axa/internal/dex/pkg/groups"
+	"github.com/ArmornetIO/axa/internal/dex/pkg/httpclient"
 )
 
 const (

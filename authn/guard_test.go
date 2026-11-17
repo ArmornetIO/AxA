@@ -11,7 +11,7 @@ import (
 // armornet with it. Tests count too, since a test import still drags its module
 // into go.sum.
 func TestModuleGuard(t *testing.T) {
-	const self = "github.com/ArmornetIO/identity/authn"
+	const self = "github.com/ArmornetIO/axa/authn"
 	out, err := exec.Command("go", "list", "-deps", "-test", "./...").Output()
 	if err != nil {
 		t.Fatalf("go list: %v", err)

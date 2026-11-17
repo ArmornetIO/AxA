@@ -13,8 +13,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector"
-	"github.com/ArmornetIO/identity/internal/dex/pkg/groups"
+	"github.com/ArmornetIO/axa/internal/dex/connector"
+	"github.com/ArmornetIO/axa/internal/dex/pkg/groups"
 )
 
 // Config holds configuration options for Atlassian Crowd connector.

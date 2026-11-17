@@ -20,8 +20,8 @@ import (
 	"google.golang.org/api/impersonate"
 	"google.golang.org/api/option"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector"
-	pkg_groups "github.com/ArmornetIO/identity/internal/dex/pkg/groups"
+	"github.com/ArmornetIO/axa/internal/dex/connector"
+	pkg_groups "github.com/ArmornetIO/axa/internal/dex/pkg/groups"
 )
 
 const (

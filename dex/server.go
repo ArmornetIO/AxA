@@ -1,4 +1,4 @@
-// Package dex is identity.Broker on an embedded Dex (the fork in pkg/dex).
+// Package dex is axa.Broker on an embedded Dex (the fork in pkg/dex).
 package dex
 
 import (
@@ -11,11 +11,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/ArmornetIO/identity"
-	"github.com/ArmornetIO/identity/internal/dex/pkg/httpclient"
-	dexserver "github.com/ArmornetIO/identity/internal/dex/server"
-	"github.com/ArmornetIO/identity/internal/dex/server/signer"
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa"
+	"github.com/ArmornetIO/axa/internal/dex/pkg/httpclient"
+	dexserver "github.com/ArmornetIO/axa/internal/dex/server"
+	"github.com/ArmornetIO/axa/internal/dex/server/signer"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
 	healthpkg "github.com/ArmornetIO/ota/health"
 	"github.com/coreos/go-oidc/v3/oidc"
 )
@@ -33,7 +33,7 @@ type Config struct {
 	IDTokensValidFor time.Duration
 
 	// Seeders run once storage is healthy and must be idempotent.
-	Seeders []identity.StartupSeeder
+	Seeders []axa.StartupSeeder
 
 	// HostAuthUI redirects Dex's login, approval and error pages to the host's
 	// /dex-* SPA routes; false if it serves none.
@@ -44,10 +44,10 @@ type Config struct {
 	DatabaseURL string
 
 	// Connectors are static: secrets resolve at Start and are never persisted.
-	Connectors []identity.Connector
+	Connectors []axa.Connector
 
 	// ConfigSealer seals stored connector configs; nil stores cleartext JSON.
-	ConfigSealer identity.ConfigSealer
+	ConfigSealer axa.ConfigSealer
 
 	// DialControl vets each address an upstream connector dials (discovery,
 	// token, userinfo). A tenant-supplied issuer is attacker-chosen, so a host
@@ -110,7 +110,7 @@ func New(cfg Config) (*Server, error) {
 }
 
 // Broker is non-nil from New, so it can be wired before Start.
-func (s *Server) Broker() identity.Broker { return s.b }
+func (s *Server) Broker() axa.Broker { return s.b }
 
 // Start opens Postgres storage, builds Dex, runs the seeders, then blocks.
 func (s *Server) Start(ctx context.Context) error {
@@ -257,12 +257,12 @@ func (s *Server) NewVerifier(ctx context.Context, issuerURL string) *oidc.IDToke
 // seed reruns a whole seeder on a serialization failure: two servers seeding
 // one database collide, and seeders converge, so a rerun is safe. The storage
 // already retries each update; this covers a seeder that does several.
-func seed(ctx context.Context, seeder identity.StartupSeeder, b identity.Broker) error {
+func seed(ctx context.Context, seeder axa.StartupSeeder, b axa.Broker) error {
 	return retrySerialization(ctx, func() error { return seeder.Seed(ctx, b) })
 }
 
 // buildStaticConnectors logs and skips a connector whose secret won't resolve.
-func buildStaticConnectors(ctx context.Context, secrets SecretResolver, conns []identity.Connector) []dexstorage.Connector {
+func buildStaticConnectors(ctx context.Context, secrets SecretResolver, conns []axa.Connector) []dexstorage.Connector {
 	var out []dexstorage.Connector
 	for _, c := range conns {
 		dc, err := BuildDexConnector(ctx, c, secrets)

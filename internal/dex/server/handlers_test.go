@@ -18,7 +18,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/oauth2"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 func boolPtr(v bool) *bool {

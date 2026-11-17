@@ -10,12 +10,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/authcode"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/authrequest"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/devicerequest"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/devicetoken"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/authcode"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/authrequest"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/devicerequest"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/devicetoken"
 )
 
 var _ storage.Storage = (*Database)(nil)

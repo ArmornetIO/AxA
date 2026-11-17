@@ -3,8 +3,8 @@ package client
 import (
 	"context"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/refreshtoken"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/refreshtoken"
 )
 
 // CreateRefresh saves provided refresh token into the database.

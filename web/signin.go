@@ -16,8 +16,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/ArmornetIO/identity/access"
-	"github.com/ArmornetIO/identity/authn"
+	"github.com/ArmornetIO/axa/access"
+	"github.com/ArmornetIO/axa/authn"
 )
 
 // errUnableToAuthenticate hides the real reason, which would enable account or
@@ -559,8 +559,39 @@ func ClassifyRotation(prior authn.SessionRecord, lookupErr error, newSubject str
 	return RotationSubjectMismatch
 }
 
+// orgsGetter is optional on Handlers.Orgs, so a host's own OrgStore keeps
+// compiling: one that reads many orgs at once lists /orgs in one query
+// instead of one per membership. pgstore.OrgStore has it.
+type orgsGetter interface {
+	GetOrgs(ctx context.Context, ids []string) ([]authn.Organization, error)
+}
+
+// orgsByID reads the orgs in ids; one that cannot be read is absent, and its
+// entry lists without a name.
+func (h *Handlers) orgsByID(ctx context.Context, ids []string) map[string]authn.Organization {
+	out := make(map[string]authn.Organization, len(ids))
+	if h.Orgs == nil {
+		return out
+	}
+	if g, ok := h.Orgs.(orgsGetter); ok {
+		orgs, err := g.GetOrgs(ctx, ids)
+		if err != nil {
+			slog.WarnContext(ctx, "list orgs: names unavailable", "err", err)
+		}
+		for _, org := range orgs {
+			out[org.ID] = org
+		}
+		return out
+	}
+	for _, id := range ids {
+		if org, err := h.Orgs.GetOrg(ctx, id); err == nil {
+			out[id] = org
+		}
+	}
+	return out
+}
+
 // handleListMyOrgs reads memberships: its caller is the one with no session org.
-// ponytail: one GetOrg per membership; join if users hold dozens of orgs.
 func (h *Handlers) handleListMyOrgs(w http.ResponseWriter, r *http.Request) {
 	sess := sessionOf(r)
 	ctx := r.Context()
@@ -578,13 +609,12 @@ func (h *Handlers) handleListMyOrgs(w http.ResponseWriter, r *http.Request) {
 	if h.DecorateOrgs != nil {
 		facts = h.DecorateOrgs(r, SessionView{Subject: sess.Subject, OrgID: sess.OrgID}, ids)
 	}
+	names := h.orgsByID(ctx, ids)
 	orgs := make([]any, 0, len(scope.Memberships))
 	for _, m := range scope.Memberships {
 		entry := orgEntry{OrgID: m.OrgID, Role: m.Role}
-		if h.Orgs != nil {
-			if org, err := h.Orgs.GetOrg(ctx, m.OrgID); err == nil {
-				entry.Name, entry.Slug = org.Name, org.Slug
-			}
+		if org, ok := names[m.OrgID]; ok {
+			entry.Name, entry.Slug = org.Name, org.Slug
 		}
 		fact, ok := facts[m.OrgID]
 		if !ok {

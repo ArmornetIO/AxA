@@ -10,7 +10,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/refreshtoken"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/refreshtoken"
 )
 
 // RefreshToken is the model entity for the RefreshToken schema.

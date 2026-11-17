@@ -7,7 +7,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/ArmornetIO/identity/authn"
+	"github.com/ArmornetIO/axa/authn"
 )
 
 // MagicLinkStore stores only the token HASH; the rest is the host's opaque Grant.

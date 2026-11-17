@@ -15,8 +15,8 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/bitbucket"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector"
-	"github.com/ArmornetIO/identity/internal/dex/pkg/groups"
+	"github.com/ArmornetIO/axa/internal/dex/connector"
+	"github.com/ArmornetIO/axa/internal/dex/pkg/groups"
 )
 
 const (

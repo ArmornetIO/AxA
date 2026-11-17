@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector"
+	"github.com/ArmornetIO/axa/internal/dex/connector"
 )
 
 // tests that the email is used as their username when they have no username set

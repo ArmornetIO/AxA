@@ -8,8 +8,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/offlinesession"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/predicate"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/offlinesession"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/predicate"
 )
 
 // OfflineSessionDelete is the builder for deleting a OfflineSession entity.

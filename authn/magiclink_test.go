@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ArmornetIO/identity/authn"
+	"github.com/ArmornetIO/axa/authn"
 )
 
 type memMagicStore struct {

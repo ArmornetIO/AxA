@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 // publicClientNoSecret is stored in DeviceRequest.client_secret when a public

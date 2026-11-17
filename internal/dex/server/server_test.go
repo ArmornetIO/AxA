@@ -29,11 +29,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/oauth2"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector"
-	"github.com/ArmornetIO/identity/internal/dex/connector/mock"
-	"github.com/ArmornetIO/identity/internal/dex/server/signer"
-	"github.com/ArmornetIO/identity/internal/dex/storage"
-	"github.com/ArmornetIO/identity/internal/dex/storage/memory"
+	"github.com/ArmornetIO/axa/internal/dex/connector"
+	"github.com/ArmornetIO/axa/internal/dex/connector/mock"
+	"github.com/ArmornetIO/axa/internal/dex/server/signer"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage/memory"
 )
 
 // ARMORNET FORK: upstream defines newLogger in api_test.go, which the fork

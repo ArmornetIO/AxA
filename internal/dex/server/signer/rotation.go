@@ -13,7 +13,7 @@ import (
 
 	"github.com/go-jose/go-jose/v4"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 var errAlreadyRotated = errors.New("keys already rotated by another server instance")

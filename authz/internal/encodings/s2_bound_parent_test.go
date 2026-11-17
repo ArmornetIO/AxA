@@ -6,7 +6,7 @@ import (
 	openfgav1 "github.com/openfga/api/proto/openfga/v1"
 	"google.golang.org/protobuf/types/known/structpb"
 
-	"github.com/ArmornetIO/identity/authz/internal/fgatest"
+	"github.com/ArmornetIO/axa/authz/internal/fgatest"
 )
 
 // The R8 shape: a rule placed via a single-valued parent is a wildcard

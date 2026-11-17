@@ -3,8 +3,8 @@ package client
 import (
 	"context"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/devicerequest"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/devicerequest"
 )
 
 // CreateDeviceRequest saves provided device request into the database.

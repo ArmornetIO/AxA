@@ -5,21 +5,21 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/ArmornetIO/identity"
+	"github.com/ArmornetIO/axa"
 )
 
 // staticResolver resolves any SecretRef to its fixed value.
 type staticResolver struct{ value string }
 
-func (r *staticResolver) Resolve(_ context.Context, _ identity.SecretRef) (string, error) {
+func (r *staticResolver) Resolve(_ context.Context, _ axa.SecretRef) (string, error) {
 	return r.value, nil
 }
 
 func TestMarshalConnectorConfig_OIDC(t *testing.T) {
-	cfg := identity.OIDCConnectorConfig{
+	cfg := axa.OIDCConnectorConfig{
 		IssuerURL:    "https://example.us.auth0.com/",
 		ClientID:     "my-client-id",
-		ClientSecret: identity.SecretRef{Namespace: "ns", Name: "secret", Key: "key"},
+		ClientSecret: axa.SecretRef{Namespace: "ns", Name: "secret", Key: "key"},
 		Scopes:       []string{"openid", "email"},
 	}
 	b, err := marshalConnectorConfig(context.Background(), cfg, &staticResolver{"supersecret"})
@@ -46,11 +46,11 @@ func TestMarshalConnectorConfig_OIDC(t *testing.T) {
 }
 
 func TestMarshalConnectorConfig_LDAP(t *testing.T) {
-	cfg := identity.LDAPConnectorConfig{
+	cfg := axa.LDAPConnectorConfig{
 		Host:       "ldap.example.com:636",
 		BindDN:     "cn=readonly,dc=example,dc=com",
-		BindSecret: identity.SecretRef{Namespace: "ns", Name: "ldap-secret", Key: "bindPW"},
-		UserSearch: identity.LDAPUserSearch{
+		BindSecret: axa.SecretRef{Namespace: "ns", Name: "ldap-secret", Key: "bindPW"},
+		UserSearch: axa.LDAPUserSearch{
 			BaseDN:    "ou=users,dc=example,dc=com",
 			Username:  "uid",
 			IDAttr:    "uid",
@@ -74,9 +74,9 @@ func TestMarshalConnectorConfig_LDAP(t *testing.T) {
 }
 
 func TestMarshalConnectorConfig_Microsoft(t *testing.T) {
-	cfg := identity.MicrosoftConnectorConfig{
+	cfg := axa.MicrosoftConnectorConfig{
 		ClientID:     "azure-client-id",
-		ClientSecret: identity.SecretRef{Namespace: "ns", Name: "az", Key: "secret"},
+		ClientSecret: axa.SecretRef{Namespace: "ns", Name: "az", Key: "secret"},
 		Tenant:       "mytenant.onmicrosoft.com",
 	}
 	b, err := marshalConnectorConfig(context.Background(), cfg, &staticResolver{"azsecret"})
@@ -101,7 +101,7 @@ func TestMarshalConnectorConfig_MicrosoftRefusesMultiTenant(t *testing.T) {
 		"9188040d-6c67-4c5b-b112-36a304b66dad", // consumers, by id
 		"acme.com/../common", "acme.com?x=", "acme",
 	} {
-		cfg := identity.MicrosoftConnectorConfig{ClientID: "id", Tenant: tenant}
+		cfg := axa.MicrosoftConnectorConfig{ClientID: "id", Tenant: tenant}
 		if _, err := marshalConnectorConfig(context.Background(), cfg, &staticResolver{"s"}); err == nil {
 			t.Errorf("tenant %q accepted", tenant)
 		}
@@ -109,10 +109,10 @@ func TestMarshalConnectorConfig_MicrosoftRefusesMultiTenant(t *testing.T) {
 }
 
 func TestMarshalConnectorConfig_GitHub(t *testing.T) {
-	cfg := identity.GitHubConnectorConfig{
+	cfg := axa.GitHubConnectorConfig{
 		ClientID:     "gh-client",
-		ClientSecret: identity.SecretRef{Namespace: "ns", Name: "gh", Key: "secret"},
-		Orgs: []identity.GitHubOrg{
+		ClientSecret: axa.SecretRef{Namespace: "ns", Name: "gh", Key: "secret"},
+		Orgs: []axa.GitHubOrg{
 			{Name: "myorg", Teams: []string{"eng"}},
 		},
 	}
@@ -132,7 +132,7 @@ func TestMarshalConnectorConfig_GitHub(t *testing.T) {
 
 func TestMarshalConnectorConfig_Opaque_PassThrough(t *testing.T) {
 	raw := json.RawMessage(`{"issuer":"https://example.com/","clientID":"foo"}`)
-	cfg := identity.OpaqueConnectorConfig{Type: "oidc", RawConfig: raw}
+	cfg := axa.OpaqueConnectorConfig{Type: "oidc", RawConfig: raw}
 
 	b, err := marshalConnectorConfig(context.Background(), cfg, &staticResolver{""})
 	if err != nil {
@@ -147,7 +147,7 @@ func TestMarshalConnectorConfig_UnsupportedType(t *testing.T) {
 	type unknown struct{}
 	// unknown does not implement ConnectorConfig; we test via OpaqueConnectorConfig
 	// with a nil RawConfig to confirm it passes nil through safely.
-	cfg := identity.OpaqueConnectorConfig{Type: "future", RawConfig: nil}
+	cfg := axa.OpaqueConnectorConfig{Type: "future", RawConfig: nil}
 	b, err := marshalConnectorConfig(context.Background(), cfg, &staticResolver{""})
 	if err != nil {
 		t.Fatalf("unexpected error for opaque nil: %v", err)

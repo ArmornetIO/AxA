@@ -10,7 +10,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/authrequest"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/authrequest"
 )
 
 // AuthRequest is the model entity for the AuthRequest schema.

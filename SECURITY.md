@@ -5,7 +5,7 @@
 Report it privately, through either channel:
 
 - **GitHub:** the **Report a vulnerability** button on this repository's
-  [Security tab](https://github.com/ArmornetIO/identity/security/advisories/new).
+  [Security tab](https://github.com/ArmornetIO/axa/security/advisories/new).
 - **Email:** [security@armornet.io](mailto:security@armornet.io).
 
 Please do not open a public issue, pull request or discussion for a

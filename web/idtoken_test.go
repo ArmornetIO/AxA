@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ArmornetIO/identity/web"
+	"github.com/ArmornetIO/axa/web"
 )
 
 // A real Dex-shaped federated:id JWT: every sign-in parses it, so a broken JSON

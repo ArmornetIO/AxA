@@ -3,10 +3,10 @@ package client
 import (
 	"context"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/connector"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/predicate"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/connector"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/predicate"
 )
 
 // CreateConnector saves a connector into the database.

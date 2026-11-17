@@ -1,4 +1,4 @@
-import type { Session } from "identity";
+import type { Session } from "axa";
 import { h } from "../dom";
 
 // Signed in: who the cookie says you are, one protected call to prove the API

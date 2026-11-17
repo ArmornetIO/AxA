@@ -8,7 +8,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/connector"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/connector"
 )
 
 // Connector is the model entity for the Connector schema.

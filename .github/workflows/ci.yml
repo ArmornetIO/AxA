@@ -1,5 +1,5 @@
-# Runs in the public identity repo; armornet's own Actions never run it
-# (armornet tests these modules with `make test-go-identity`).
+# Runs in the public axa repo; armornet's own Actions never run it
+# (armornet tests these modules with `make test-go-axa`).
 name: ci
 
 on:

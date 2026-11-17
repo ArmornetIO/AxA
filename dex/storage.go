@@ -8,16 +8,16 @@ import (
 	entSQL "entgo.io/ent/dialect/sql"
 	_ "github.com/lib/pq"
 
-	"github.com/ArmornetIO/identity"
-	"github.com/ArmornetIO/identity/authn/secrethash"
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
-	entclient "github.com/ArmornetIO/identity/internal/dex/storage/ent/client"
-	entdb "github.com/ArmornetIO/identity/internal/dex/storage/ent/db"
+	"github.com/ArmornetIO/axa"
+	"github.com/ArmornetIO/axa/authn/secrethash"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
+	entclient "github.com/ArmornetIO/axa/internal/dex/storage/ent/client"
+	entdb "github.com/ArmornetIO/axa/internal/dex/storage/ent/db"
 )
 
 // newStorage opens Ent on Postgres; the host migrates, and the fork disables
 // Ent's Schema().Create().
-func newStorage(databaseURL string, sealer identity.ConfigSealer, deviceGated bool) (dexstorage.Storage, error) {
+func newStorage(databaseURL string, sealer axa.ConfigSealer, deviceGated bool) (dexstorage.Storage, error) {
 	if databaseURL == "" {
 		return nil, fmt.Errorf("dex: DatabaseURL is required")
 	}

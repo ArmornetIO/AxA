@@ -12,7 +12,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector"
+	"github.com/ArmornetIO/axa/internal/dex/connector"
 )
 
 type conn struct {

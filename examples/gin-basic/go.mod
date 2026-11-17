@@ -1,10 +1,10 @@
-module github.com/ArmornetIO/identity/examples/gin-basic
+module github.com/ArmornetIO/axa/examples/gin-basic
 
 go 1.27.4
 
 require (
-	github.com/ArmornetIO/identity v0.0.1
-	github.com/ArmornetIO/identity/authn v0.0.1
+	github.com/ArmornetIO/axa v0.0.1
+	github.com/ArmornetIO/axa/authn v0.0.1
 	github.com/gin-gonic/gin v1.12.0
 	github.com/lib/pq v1.12.3
 )
@@ -16,7 +16,7 @@ require (
 	cloud.google.com/go/compute/metadata v0.9.0 // indirect
 	dario.cat/mergo v1.0.1 // indirect
 	entgo.io/ent v0.14.5 // indirect
-	github.com/ArmornetIO/identity/authz v0.0.1 // indirect
+	github.com/ArmornetIO/axa/authz v0.0.1 // indirect
 	github.com/ArmornetIO/ota v0.0.1 // indirect
 	github.com/Azure/go-ntlmssp v0.1.1 // indirect
 	github.com/IBM/pgxpoolprometheus v1.1.3 // indirect
@@ -155,8 +155,8 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/ArmornetIO/identity => ../..
+replace github.com/ArmornetIO/axa => ../..
 
-replace github.com/ArmornetIO/identity/authn => ../../authn
+replace github.com/ArmornetIO/axa/authn => ../../authn
 
-replace github.com/ArmornetIO/identity/authz => ../../authz
+replace github.com/ArmornetIO/axa/authz => ../../authz

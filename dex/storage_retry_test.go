@@ -9,8 +9,8 @@ import (
 	"github.com/lib/pq"
 	pkgerrors "github.com/pkg/errors"
 
-	"github.com/ArmornetIO/identity/authn/secrethash"
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa/authn/secrethash"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 // The Ent client hands back the pq error under both of its wrappings — %w from

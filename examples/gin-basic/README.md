@@ -1,9 +1,9 @@
 # gin-basic
 
-A Gin API behind identity's browser sign-in, in one process:
+A Gin API behind AxA's browser sign-in, in one process:
 
 - the issuer (embedded Dex) at `/dex`,
-- the sign-in flow (`identity/web`) at `/api/auth/*`,
+- the sign-in flow (`axa/web`) at `/api/auth/*`,
 - your API at `/api/*`, refused without a live session cookie.
 
 Dex's mock connector stands in for a real identity provider, so nothing but
@@ -19,14 +19,14 @@ Open http://localhost:8081, press **Sign in**, then **GET /api/hello**.
 ## What to read
 
 - `main.go` — the whole wiring. `mountAuth` is the three lines that put
-  identity/web's `net/http` routes on a Gin router; `requireSession` is all
+  axa/web's `net/http` routes on a Gin router; `requireSession` is all
   "behind our auth" means for the API.
 - `index.html` — the browser half of the round trip, with no build step. The
   [custom-login](../custom-login) example does the same with a designed UI.
 
 ## Things the example does that a real app should know about
 
-- **Schema is yours.** Identity never migrates. `pgstore.Schema()` and
+- **Schema is yours.** AxA never migrates. `pgstore.Schema()` and
   `dex.Schema()` return idempotent DDL; this example runs them at start, a real
   app folds them into its migrations.
 - **A public client, no secret.** The browser flow proves itself with PKCE, so
@@ -43,4 +43,4 @@ Open http://localhost:8081, press **Sign in**, then **GET /api/hello**.
 | `ADDR` | `BASE_URL`'s port — set it when a proxy owns `BASE_URL` |
 
 Outside this repo, delete the `replace` block in `go.mod` and require a tagged
-identity release.
+AxA release.

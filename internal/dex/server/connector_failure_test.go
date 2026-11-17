@@ -11,9 +11,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ArmornetIO/identity/internal/dex/server/signer"
-	"github.com/ArmornetIO/identity/internal/dex/storage"
-	"github.com/ArmornetIO/identity/internal/dex/storage/memory"
+	"github.com/ArmornetIO/axa/internal/dex/server/signer"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage/memory"
 )
 
 // newServerWithConnectors starts a server over fresh memory storage seeded with

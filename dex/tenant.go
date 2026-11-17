@@ -11,9 +11,9 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector/microsoft"
-	"github.com/ArmornetIO/identity/internal/dex/connector/oidc"
-	"github.com/ArmornetIO/identity/internal/dex/connector/saml"
+	"github.com/ArmornetIO/axa/internal/dex/connector/microsoft"
+	"github.com/ArmornetIO/axa/internal/dex/connector/oidc"
+	"github.com/ArmornetIO/axa/internal/dex/connector/saml"
 )
 
 // TenantConnectorTypes excludes mocks (a fixed fake user), authproxy (trusts a

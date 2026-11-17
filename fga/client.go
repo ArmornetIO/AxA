@@ -8,7 +8,7 @@ import (
 	parser "github.com/openfga/language/pkg/go/transformer"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 
-	"github.com/ArmornetIO/identity/authz"
+	"github.com/ArmornetIO/axa/authz"
 )
 
 // OpenFGA caps a Read page at 100; one page once truncated the admin tuple

@@ -1,6 +1,6 @@
 // Package identity is the broker contract the REST and OIDC layers program
 // against; backends (dex/) implement it and callers never import one directly.
-package identity
+package axa
 
 import (
 	"context"

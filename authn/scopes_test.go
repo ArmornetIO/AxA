@@ -4,7 +4,7 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/ArmornetIO/identity/authn"
+	"github.com/ArmornetIO/axa/authn"
 )
 
 func TestGrantableScopes_AdminRolesGetEverything(t *testing.T) {

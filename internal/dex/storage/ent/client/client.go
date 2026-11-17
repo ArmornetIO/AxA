@@ -3,8 +3,8 @@ package client
 import (
 	"context"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/oauth2client"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/oauth2client"
 )
 
 // CreateClient saves provided oauth2 client settings into the database.

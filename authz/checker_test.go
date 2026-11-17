@@ -13,7 +13,7 @@ import (
 	otellog "go.opentelemetry.io/otel/log"
 	sdklog "go.opentelemetry.io/otel/sdk/log"
 
-	"github.com/ArmornetIO/identity/authz"
+	"github.com/ArmornetIO/axa/authz"
 )
 
 var alice = authz.Subject{Type: "user", ID: "alice"}
