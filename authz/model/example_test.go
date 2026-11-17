@@ -10,9 +10,9 @@ import (
 
 	openfgav1 "github.com/openfga/api/proto/openfga/v1"
 
-	"github.com/ArmornetIO/identity/authz/cbac"
-	"github.com/ArmornetIO/identity/authz/mac"
-	"github.com/ArmornetIO/identity/authz/model"
+	"github.com/ArmornetIO/axa/authz/cbac"
+	"github.com/ArmornetIO/axa/authz/mac"
+	"github.com/ArmornetIO/axa/authz/model"
 )
 
 type DocID string

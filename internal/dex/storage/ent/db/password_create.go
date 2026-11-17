@@ -9,7 +9,7 @@ import (
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/password"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/password"
 )
 
 // PasswordCreate is the builder for creating a Password entity.

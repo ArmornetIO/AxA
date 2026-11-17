@@ -8,55 +8,55 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/ArmornetIO/identity"
-	"github.com/ArmornetIO/identity/internal/dex/connector/saml"
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa"
+	"github.com/ArmornetIO/axa/internal/dex/connector/saml"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
-// connectorStore implements identity.ConnectorStore via Dex's K8s CRD storage.
+// connectorStore implements axa.ConnectorStore via Dex's K8s CRD storage.
 type connectorStore struct {
 	storage dexstorage.Storage
 	secrets SecretResolver
 }
 
-func (s *connectorStore) Create(ctx context.Context, c identity.Connector) error {
+func (s *connectorStore) Create(ctx context.Context, c axa.Connector) error {
 	dc, err := s.toDex(ctx, c)
 	if err != nil {
 		return err
 	}
 	if err := s.storage.CreateConnector(ctx, dc); err != nil {
 		if errors.Is(err, dexstorage.ErrAlreadyExists) {
-			return identity.ErrConnectorExists
+			return axa.ErrConnectorExists
 		}
 		return fmt.Errorf("identity/dex: create connector: %w", err)
 	}
 	return nil
 }
 
-func (s *connectorStore) List(ctx context.Context) ([]identity.Connector, error) {
+func (s *connectorStore) List(ctx context.Context) ([]axa.Connector, error) {
 	dcs, err := s.storage.ListConnectors(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("identity/dex: list connectors: %w", err)
 	}
-	out := make([]identity.Connector, len(dcs))
+	out := make([]axa.Connector, len(dcs))
 	for i, dc := range dcs {
 		out[i] = fromDex(dc)
 	}
 	return out, nil
 }
 
-func (s *connectorStore) Get(ctx context.Context, id string) (identity.Connector, error) {
+func (s *connectorStore) Get(ctx context.Context, id string) (axa.Connector, error) {
 	dc, err := s.storage.GetConnector(ctx, id)
 	if err != nil {
 		if errors.Is(err, dexstorage.ErrNotFound) {
-			return identity.Connector{}, identity.ErrConnectorNotFound
+			return axa.Connector{}, axa.ErrConnectorNotFound
 		}
-		return identity.Connector{}, fmt.Errorf("identity/dex: get connector %q: %w", id, err)
+		return axa.Connector{}, fmt.Errorf("identity/dex: get connector %q: %w", id, err)
 	}
 	return fromDex(dc), nil
 }
 
-func (s *connectorStore) Update(ctx context.Context, c identity.Connector) error {
+func (s *connectorStore) Update(ctx context.Context, c axa.Connector) error {
 	dc, err := s.toDex(ctx, c)
 	if err != nil {
 		return err
@@ -69,7 +69,7 @@ func (s *connectorStore) Update(ctx context.Context, c identity.Connector) error
 	}
 	if err := s.storage.UpdateConnector(ctx, c.ID, updater); err != nil {
 		if errors.Is(err, dexstorage.ErrNotFound) {
-			return identity.ErrConnectorNotFound
+			return axa.ErrConnectorNotFound
 		}
 		return fmt.Errorf("identity/dex: update connector %q: %w", c.ID, err)
 	}
@@ -79,7 +79,7 @@ func (s *connectorStore) Update(ctx context.Context, c identity.Connector) error
 func (s *connectorStore) Delete(ctx context.Context, id string) error {
 	if err := s.storage.DeleteConnector(ctx, id); err != nil {
 		if errors.Is(err, dexstorage.ErrNotFound) {
-			return identity.ErrConnectorNotFound
+			return axa.ErrConnectorNotFound
 		}
 		return fmt.Errorf("identity/dex: delete connector %q: %w", id, err)
 	}
@@ -88,7 +88,7 @@ func (s *connectorStore) Delete(ctx context.Context, id string) error {
 
 // toDex is the only place resolved credentials touch memory; they go straight
 // into the storage call.
-func (s *connectorStore) toDex(ctx context.Context, c identity.Connector) (dexstorage.Connector, error) {
+func (s *connectorStore) toDex(ctx context.Context, c axa.Connector) (dexstorage.Connector, error) {
 	cfgBytes, err := marshalConnectorConfig(ctx, c.Config, s.secrets)
 	if err != nil {
 		return dexstorage.Connector{}, fmt.Errorf("connector %q: %w", c.ID, err)
@@ -96,14 +96,14 @@ func (s *connectorStore) toDex(ctx context.Context, c identity.Connector) (dexst
 	return dexstorage.Connector{
 		ID:     c.ID,
 		Name:   c.Name,
-		Type:   identity.ConnectorType(c.Config),
+		Type:   axa.ConnectorType(c.Config),
 		Config: cfgBytes,
 	}, nil
 }
 
 // BuildDexConnector builds a static, never-persisted connector for
 // Config.Connectors.
-func BuildDexConnector(ctx context.Context, c identity.Connector, secrets SecretResolver) (dexstorage.Connector, error) {
+func BuildDexConnector(ctx context.Context, c axa.Connector, secrets SecretResolver) (dexstorage.Connector, error) {
 	cfgBytes, err := marshalConnectorConfig(ctx, c.Config, secrets)
 	if err != nil {
 		return dexstorage.Connector{}, fmt.Errorf("connector %q: %w", c.ID, err)
@@ -111,18 +111,18 @@ func BuildDexConnector(ctx context.Context, c identity.Connector, secrets Secret
 	return dexstorage.Connector{
 		ID:     c.ID,
 		Name:   c.Name,
-		Type:   identity.ConnectorType(c.Config),
+		Type:   axa.ConnectorType(c.Config),
 		Config: cfgBytes,
 	}, nil
 }
 
-// fromDex converts a Dex storage connector to an identity.Connector.
+// fromDex converts a Dex storage connector to an axa.Connector.
 // The Config is always OpaqueConnectorConfig — credentials are not round-tripped.
-func fromDex(dc dexstorage.Connector) identity.Connector {
-	return identity.Connector{
+func fromDex(dc dexstorage.Connector) axa.Connector {
+	return axa.Connector{
 		ID:   dc.ID,
 		Name: dc.Name,
-		Config: identity.OpaqueConnectorConfig{
+		Config: axa.OpaqueConnectorConfig{
 			Type:      dc.Type,
 			RawConfig: json.RawMessage(dc.Config),
 		},
@@ -131,21 +131,21 @@ func fromDex(dc dexstorage.Connector) identity.Connector {
 
 // marshalConnectorConfig resolves SecretRefs and marshals a ConnectorConfig to
 // the JSON shape that Dex's connector implementations expect on unmarshal.
-func marshalConnectorConfig(ctx context.Context, cfg identity.ConnectorConfig, secrets SecretResolver) ([]byte, error) {
+func marshalConnectorConfig(ctx context.Context, cfg axa.ConnectorConfig, secrets SecretResolver) ([]byte, error) {
 	switch c := cfg.(type) {
-	case identity.OIDCConnectorConfig:
+	case axa.OIDCConnectorConfig:
 		return marshalOIDC(ctx, c, secrets)
-	case identity.SAMLConnectorConfig:
+	case axa.SAMLConnectorConfig:
 		return marshalSAML(ctx, c, secrets)
-	case identity.LDAPConnectorConfig:
+	case axa.LDAPConnectorConfig:
 		return marshalLDAP(ctx, c, secrets)
-	case identity.MicrosoftConnectorConfig:
+	case axa.MicrosoftConnectorConfig:
 		return marshalMicrosoft(ctx, c, secrets)
-	case identity.GitHubConnectorConfig:
+	case axa.GitHubConnectorConfig:
 		return marshalGitHub(ctx, c, secrets)
-	case identity.GoogleConnectorConfig:
+	case axa.GoogleConnectorConfig:
 		return marshalGoogle(ctx, c, secrets)
-	case identity.OpaqueConnectorConfig:
+	case axa.OpaqueConnectorConfig:
 		// Pass raw bytes through unchanged (e.g. when re-storing after a read).
 		return c.RawConfig, nil
 	default:
@@ -163,7 +163,7 @@ type dexOIDCConfig struct {
 	InsecureSkipVerify bool     `json:"insecureSkipVerify,omitempty"`
 }
 
-func marshalOIDC(ctx context.Context, c identity.OIDCConnectorConfig, s SecretResolver) ([]byte, error) {
+func marshalOIDC(ctx context.Context, c axa.OIDCConnectorConfig, s SecretResolver) ([]byte, error) {
 	secret, err := s.Resolve(ctx, c.ClientSecret)
 	if err != nil {
 		return nil, fmt.Errorf("oidc clientSecret: %w", err)
@@ -181,7 +181,7 @@ func marshalOIDC(ctx context.Context, c identity.OIDCConnectorConfig, s SecretRe
 
 // marshalSAML uses Dex's own saml.Config: a mirror once sent PEM where Dex wants
 // base64, and no SAML connector could open.
-func marshalSAML(ctx context.Context, c identity.SAMLConnectorConfig, s SecretResolver) ([]byte, error) {
+func marshalSAML(ctx context.Context, c axa.SAMLConnectorConfig, s SecretResolver) ([]byte, error) {
 	ca, err := s.Resolve(ctx, c.CARef)
 	if err != nil {
 		return nil, fmt.Errorf("saml CA cert: %w", err)
@@ -232,7 +232,7 @@ type dexUserMatcher struct {
 	GroupAttr string `json:"groupAttr"`
 }
 
-func marshalLDAP(ctx context.Context, c identity.LDAPConnectorConfig, s SecretResolver) ([]byte, error) {
+func marshalLDAP(ctx context.Context, c axa.LDAPConnectorConfig, s SecretResolver) ([]byte, error) {
 	bindPW, err := s.Resolve(ctx, c.BindSecret)
 	if err != nil {
 		return nil, fmt.Errorf("ldap bindPW: %w", err)
@@ -296,7 +296,7 @@ func checkMicrosoftTenant(tenant string) error {
 	return nil
 }
 
-func marshalMicrosoft(ctx context.Context, c identity.MicrosoftConnectorConfig, s SecretResolver) ([]byte, error) {
+func marshalMicrosoft(ctx context.Context, c axa.MicrosoftConnectorConfig, s SecretResolver) ([]byte, error) {
 	if err := checkMicrosoftTenant(c.Tenant); err != nil {
 		return nil, err
 	}
@@ -329,7 +329,7 @@ type dexGitHubOrg struct {
 	Teams []string `json:"teams,omitempty"`
 }
 
-func marshalGitHub(ctx context.Context, c identity.GitHubConnectorConfig, s SecretResolver) ([]byte, error) {
+func marshalGitHub(ctx context.Context, c axa.GitHubConnectorConfig, s SecretResolver) ([]byte, error) {
 	secret, err := s.Resolve(ctx, c.ClientSecret)
 	if err != nil {
 		return nil, fmt.Errorf("github clientSecret: %w", err)
@@ -357,7 +357,7 @@ type dexGoogleConfig struct {
 	HostedDomains []string `json:"hostedDomains,omitempty"`
 }
 
-func marshalGoogle(ctx context.Context, c identity.GoogleConnectorConfig, s SecretResolver) ([]byte, error) {
+func marshalGoogle(ctx context.Context, c axa.GoogleConnectorConfig, s SecretResolver) ([]byte, error) {
 	secret, err := s.Resolve(ctx, c.ClientSecret)
 	if err != nil {
 		return nil, fmt.Errorf("google clientSecret: %w", err)
@@ -371,4 +371,4 @@ func marshalGoogle(ctx context.Context, c identity.GoogleConnectorConfig, s Secr
 	})
 }
 
-var _ identity.ConnectorStore = (*connectorStore)(nil)
+var _ axa.ConnectorStore = (*connectorStore)(nil)

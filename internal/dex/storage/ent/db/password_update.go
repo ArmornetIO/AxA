@@ -11,8 +11,8 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/password"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/predicate"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/password"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/predicate"
 )
 
 // PasswordUpdate is the builder for updating Password entities.

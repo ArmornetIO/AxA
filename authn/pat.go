@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ArmornetIO/identity/authn/secrethash"
+	"github.com/ArmornetIO/axa/authn/secrethash"
 )
 
 // ErrUnauthorized is returned when a PAT is absent, malformed, unknown, or

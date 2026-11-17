@@ -1,5 +1,5 @@
 // Package web is browser sign-in on net/http: /api/auth/* from issuer bounce to
-// session cookie, plus MFA. identity/ts is its client; pgstore fills its stores.
+// session cookie, plus MFA. axa/ts is its client; pgstore fills its stores.
 package web
 
 import (
@@ -11,12 +11,12 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/ArmornetIO/identity/authn"
+	"github.com/ArmornetIO/axa/authn"
 )
 
 const preAuthTTL = 10 * time.Minute
 
-// DefaultCSRFHeader matches identity/ts's default. A custom header forces a
+// DefaultCSRFHeader matches axa/ts's default. A custom header forces a
 // CORS preflight, which is the whole defence: a cross-site form cannot set it.
 const DefaultCSRFHeader = "x-armornet-csrf"
 
@@ -40,7 +40,7 @@ type SessionView struct {
 	Subject string
 	OrgID   string
 	// ViaAccess is true when the caller arrived with a verified access
-	// assertion rather than a cookie (identity/access).
+	// assertion rather than a cookie (axa/access).
 	ViaAccess bool
 }
 

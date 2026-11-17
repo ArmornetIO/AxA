@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector"
+	"github.com/ArmornetIO/axa/internal/dex/connector"
 )
 
 // Config holds the configuration parameters for a connector which returns an

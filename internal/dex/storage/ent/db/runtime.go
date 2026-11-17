@@ -5,17 +5,17 @@ package db
 import (
 	"time"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/authcode"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/authrequest"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/connector"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/devicerequest"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/devicetoken"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/keys"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/oauth2client"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/offlinesession"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/password"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/refreshtoken"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/schema"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/authcode"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/authrequest"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/connector"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/devicerequest"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/devicetoken"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/keys"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/oauth2client"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/offlinesession"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/password"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/refreshtoken"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/schema"
 )
 
 // The init function reads all schema descriptors with runtime code

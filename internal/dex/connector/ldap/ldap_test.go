@@ -9,7 +9,7 @@ import (
 
 	"github.com/kylelemons/godebug/pretty"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector"
+	"github.com/ArmornetIO/axa/internal/dex/connector"
 )
 
 // connectionMethod indicates how the test should connect to the LDAP server.

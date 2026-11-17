@@ -13,7 +13,7 @@ import (
 	"github.com/openfga/openfga/pkg/storage/postgres"
 	"github.com/openfga/openfga/pkg/storage/sqlcommon"
 
-	"github.com/ArmornetIO/identity/authz"
+	"github.com/ArmornetIO/axa/authz"
 )
 
 type Config struct {

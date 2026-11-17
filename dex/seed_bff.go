@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/ArmornetIO/identity"
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 // BFFClientSeeder upserts armornet-bff on every start so the stored secret
@@ -21,7 +21,7 @@ type BFFClientSeeder struct {
 
 func (s *BFFClientSeeder) Name() string { return "bff-oauth2-client" }
 
-func (s *BFFClientSeeder) Seed(ctx context.Context, b identity.Broker) error {
+func (s *BFFClientSeeder) Seed(ctx context.Context, b axa.Broker) error {
 	if s.Secret == "" {
 		slog.WarnContext(ctx, "dex: BFF client not seeded — ARMORNET_IDENTITY_CLIENT_SECRET is unset")
 		return nil

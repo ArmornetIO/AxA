@@ -7,7 +7,7 @@ import (
 
 	openfgav1 "github.com/openfga/api/proto/openfga/v1"
 
-	"github.com/ArmornetIO/identity/authz"
+	"github.com/ArmornetIO/axa/authz"
 )
 
 // fakeFGASvr returns the configured errors, to drive the error paths with no store.

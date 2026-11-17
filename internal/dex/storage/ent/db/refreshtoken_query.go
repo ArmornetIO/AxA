@@ -11,8 +11,8 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/predicate"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/refreshtoken"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/predicate"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/refreshtoken"
 )
 
 // RefreshTokenQuery is the builder for querying RefreshToken entities.

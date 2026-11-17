@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/ArmornetIO/identity/internal/dex/pkg/groups"
+	"github.com/ArmornetIO/axa/internal/dex/pkg/groups"
 )
 
 func TestFilter(t *testing.T) {

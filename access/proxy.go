@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ArmornetIO/identity/authn"
+	"github.com/ArmornetIO/axa/authn"
 )
 
 // The identity-aware proxy sends a token-less browser to sign in (a 401 leaves

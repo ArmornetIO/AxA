@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ArmornetIO/identity/authn"
-	"github.com/ArmornetIO/identity/web"
+	"github.com/ArmornetIO/axa/authn"
+	"github.com/ArmornetIO/axa/web"
 )
 
 func TestClassifyRotation(t *testing.T) {

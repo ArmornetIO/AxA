@@ -1,4 +1,4 @@
-package identity
+package axa
 
 import (
 	"os/exec"
@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	pkgAuthn  = "github.com/ArmornetIO/identity/authn"
-	pkgAuthz  = "github.com/ArmornetIO/identity/authz"
-	pkgAccess = "github.com/ArmornetIO/identity/access"
+	pkgAuthn  = "github.com/ArmornetIO/axa/authn"
+	pkgAuthz  = "github.com/ArmornetIO/axa/authz"
+	pkgAccess = "github.com/ArmornetIO/axa/access"
 )
 
 // goList runs go list over patterns and returns one line per package, each

@@ -3,7 +3,7 @@ package web_test
 import (
 	"testing"
 
-	"github.com/ArmornetIO/identity/web"
+	"github.com/ArmornetIO/axa/web"
 )
 
 func TestSignupDomainAllowed(t *testing.T) {

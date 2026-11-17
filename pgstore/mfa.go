@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ArmornetIO/identity/authn"
+	"github.com/ArmornetIO/axa/authn"
 	"github.com/lib/pq"
 )
 

@@ -15,7 +15,7 @@ import (
 
 	"github.com/go-ldap/ldap/v3"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector"
+	"github.com/ArmornetIO/axa/internal/dex/connector"
 )
 
 // Config holds the configuration parameters for the LDAP connector. The LDAP

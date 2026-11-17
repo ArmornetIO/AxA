@@ -9,10 +9,10 @@ import (
 	"log/slog"
 	"testing"
 
-	dexserver "github.com/ArmornetIO/identity/internal/dex/server"
-	"github.com/ArmornetIO/identity/internal/dex/server/signer"
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
-	"github.com/ArmornetIO/identity/internal/dex/storage/memory"
+	dexserver "github.com/ArmornetIO/axa/internal/dex/server"
+	"github.com/ArmornetIO/axa/internal/dex/server/signer"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage/memory"
 	healthpkg "github.com/ArmornetIO/ota/health"
 )
 

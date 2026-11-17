@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ArmornetIO/identity/access"
+	"github.com/ArmornetIO/axa/access"
 )
 
 // fakeOriginSealer is reversible, not encryption: these test when the store opens.

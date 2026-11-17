@@ -9,8 +9,8 @@ import (
 	"net/netip"
 	"time"
 
-	"github.com/ArmornetIO/identity/authz/cbac"
-	"github.com/ArmornetIO/identity/authz/model"
+	"github.com/ArmornetIO/axa/authz/cbac"
+	"github.com/ArmornetIO/axa/authz/model"
 )
 
 type DocID string

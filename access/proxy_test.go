@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/ArmornetIO/identity/authn"
+	"github.com/ArmornetIO/axa/authn"
 )
 
 type memPreAuth struct {

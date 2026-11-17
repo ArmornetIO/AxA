@@ -1,4 +1,4 @@
-package identity
+package axa
 
 import (
 	"context"
@@ -127,7 +127,7 @@ type MicrosoftConnectorConfig struct {
 	ClientID     string
 	ClientSecret SecretRef
 	// Tenant is required and must be single-tenant; "common", "organizations"
-	// and "consumers" are refused (see identity/dex marshalMicrosoft).
+	// and "consumers" are refused (see axa/dex marshalMicrosoft).
 	Tenant string
 	// OnlySecurityGroups keeps tokens small for users in many groups.
 	OnlySecurityGroups bool

@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 var _ storage.Storage = (*memStorage)(nil)

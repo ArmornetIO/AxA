@@ -1,4 +1,4 @@
-import type { ConnectorInfo } from "identity";
+import type { ConnectorInfo } from "axa";
 import { h } from "../dom";
 
 // Step two: which identity provider. One button per connector the workspace

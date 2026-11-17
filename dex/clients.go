@@ -7,16 +7,16 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ArmornetIO/identity"
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
-// clientStore implements identity.ClientStore via Dex's K8s CRD storage.
+// clientStore implements axa.ClientStore via Dex's K8s CRD storage.
 type clientStore struct {
 	storage dexstorage.Storage
 }
 
-// ErrNotStarted: hook work that needs a live store as an identity.StartupSeeder.
+// ErrNotStarted: hook work that needs a live store as an axa.StartupSeeder.
 var ErrNotStarted = errors.New("identity/dex: broker not started")
 
 // ready guards every method against use before initialise().
@@ -28,7 +28,7 @@ func (s *clientStore) ready() error {
 }
 
 // Create returns the generated secret once; Dex stores it hashed.
-func (s *clientStore) Create(ctx context.Context, c identity.Client) (string, error) {
+func (s *clientStore) Create(ctx context.Context, c axa.Client) (string, error) {
 	if err := s.ready(); err != nil {
 		return "", err
 	}
@@ -40,7 +40,7 @@ func (s *clientStore) Create(ctx context.Context, c identity.Client) (string, er
 	dc := toDexClient(c, secret)
 	if err := s.storage.CreateClient(ctx, dc); err != nil {
 		if errors.Is(err, dexstorage.ErrAlreadyExists) {
-			return "", identity.ErrClientExists
+			return "", axa.ErrClientExists
 		}
 		return "", fmt.Errorf("identity/dex: create client %q: %w", c.ID, err)
 	}
@@ -52,7 +52,7 @@ func (s *clientStore) Create(ctx context.Context, c identity.Client) (string, er
 	return secret, nil
 }
 
-func (s *clientStore) List(ctx context.Context) ([]identity.Client, error) {
+func (s *clientStore) List(ctx context.Context) ([]axa.Client, error) {
 	if err := s.ready(); err != nil {
 		return nil, err
 	}
@@ -60,30 +60,30 @@ func (s *clientStore) List(ctx context.Context) ([]identity.Client, error) {
 	if err != nil {
 		return nil, fmt.Errorf("identity/dex: list clients: %w", err)
 	}
-	out := make([]identity.Client, len(dcs))
+	out := make([]axa.Client, len(dcs))
 	for i, dc := range dcs {
 		out[i] = fromDexClient(dc)
 	}
 	return out, nil
 }
 
-func (s *clientStore) Get(ctx context.Context, id string) (identity.Client, error) {
+func (s *clientStore) Get(ctx context.Context, id string) (axa.Client, error) {
 	if err := s.ready(); err != nil {
-		return identity.Client{}, err
+		return axa.Client{}, err
 	}
 	dc, err := s.storage.GetClient(ctx, id)
 	if err != nil {
 		if errors.Is(err, dexstorage.ErrNotFound) {
-			return identity.Client{}, identity.ErrClientNotFound
+			return axa.Client{}, axa.ErrClientNotFound
 		}
-		return identity.Client{}, fmt.Errorf("identity/dex: get client %q: %w", id, err)
+		return axa.Client{}, fmt.Errorf("identity/dex: get client %q: %w", id, err)
 	}
 	return fromDexClient(dc), nil
 }
 
 // Update replaces mutable fields (Name, RedirectURIs, TrustedPeers, LogoURL).
 // The client secret is not touched.
-func (s *clientStore) Update(ctx context.Context, c identity.Client) error {
+func (s *clientStore) Update(ctx context.Context, c axa.Client) error {
 	if err := s.ready(); err != nil {
 		return err
 	}
@@ -97,7 +97,7 @@ func (s *clientStore) Update(ctx context.Context, c identity.Client) error {
 	}
 	if err := s.storage.UpdateClient(ctx, c.ID, updater); err != nil {
 		if errors.Is(err, dexstorage.ErrNotFound) {
-			return identity.ErrClientNotFound
+			return axa.ErrClientNotFound
 		}
 		return fmt.Errorf("identity/dex: update client %q: %w", c.ID, err)
 	}
@@ -120,7 +120,7 @@ func (s *clientStore) RotateSecret(ctx context.Context, id string) (string, erro
 	}
 	if err := s.storage.UpdateClient(ctx, id, updater); err != nil {
 		if errors.Is(err, dexstorage.ErrNotFound) {
-			return "", identity.ErrClientNotFound
+			return "", axa.ErrClientNotFound
 		}
 		return "", fmt.Errorf("identity/dex: rotate secret for client %q: %w", id, err)
 	}
@@ -133,16 +133,16 @@ func (s *clientStore) Delete(ctx context.Context, id string) error {
 	}
 	if err := s.storage.DeleteClient(ctx, id); err != nil {
 		if errors.Is(err, dexstorage.ErrNotFound) {
-			return identity.ErrClientNotFound
+			return axa.ErrClientNotFound
 		}
 		return fmt.Errorf("identity/dex: delete client %q: %w", id, err)
 	}
 	return nil
 }
 
-// toDexClient converts an identity.Client to Dex's storage type.
+// toDexClient converts an axa.Client to Dex's storage type.
 // secret is stored in Dex's CRD; it is protected by the ServiceAccount RBAC.
-func toDexClient(c identity.Client, secret string) dexstorage.Client {
+func toDexClient(c axa.Client, secret string) dexstorage.Client {
 	return dexstorage.Client{
 		ID:           c.ID,
 		Secret:       secret,
@@ -164,10 +164,10 @@ func storedLogoURL(u string) string {
 	return u
 }
 
-// fromDexClient converts a Dex storage client to identity.Client.
+// fromDexClient converts a Dex storage client to axa.Client.
 // Secret is always empty — the plaintext is never returned after creation.
-func fromDexClient(dc dexstorage.Client) identity.Client {
-	return identity.Client{
+func fromDexClient(dc dexstorage.Client) axa.Client {
+	return axa.Client{
 		ID:           dc.ID,
 		Name:         dc.Name,
 		RedirectURIs: dc.RedirectURIs,
@@ -194,4 +194,4 @@ func generateSecret() (string, error) {
 	return base64.RawURLEncoding.EncodeToString(b), nil
 }
 
-var _ identity.ClientStore = (*clientStore)(nil)
+var _ axa.ClientStore = (*clientStore)(nil)

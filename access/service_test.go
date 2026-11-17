@@ -9,8 +9,8 @@ import (
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	"go.opentelemetry.io/otel/sdk/trace/tracetest"
 
-	"github.com/ArmornetIO/identity/access"
-	"github.com/ArmornetIO/identity/authz"
+	"github.com/ArmornetIO/axa/access"
+	"github.com/ArmornetIO/axa/authz"
 )
 
 var _ access.RelationChecker = (*authz.Checker)(nil)

@@ -17,7 +17,7 @@ type Request struct {
 	Origin string
 }
 
-// Authorizer is the ONLY thing that may refuse. identity/access implements it; the
+// Authorizer is the ONLY thing that may refuse. axa/access implements it; the
 // host wires it in, since this module depends on gin alone.
 type Authorizer interface {
 	Authorize(ctx context.Context, req Request) Verdict

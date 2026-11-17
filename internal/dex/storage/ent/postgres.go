@@ -14,9 +14,9 @@ import (
 	entSQL "entgo.io/ent/dialect/sql"
 	_ "github.com/lib/pq" // Register postgres driver.
 
-	"github.com/ArmornetIO/identity/internal/dex/storage"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/client"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/client"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db"
 )
 
 const (

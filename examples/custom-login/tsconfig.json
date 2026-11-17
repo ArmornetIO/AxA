@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     "types": [],
     "paths": {
-      "identity": ["../../ts/index.ts"]
+      "axa": ["../../ts/index.ts"]
     }
   },
   "include": ["src", "../../ts"]

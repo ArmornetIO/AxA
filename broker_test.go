@@ -1,25 +1,25 @@
-package identity_test
+package axa_test
 
 import (
 	"testing"
 
-	"github.com/ArmornetIO/identity"
+	"github.com/ArmornetIO/axa"
 )
 
 func TestConnectorType(t *testing.T) {
 	cases := []struct {
-		cfg  identity.ConnectorConfig
+		cfg  axa.ConnectorConfig
 		want string
 	}{
-		{identity.OIDCConnectorConfig{}, "oidc"},
-		{identity.SAMLConnectorConfig{}, "saml"},
-		{identity.LDAPConnectorConfig{}, "ldap"},
-		{identity.MicrosoftConnectorConfig{}, "microsoft"},
-		{identity.GitHubConnectorConfig{}, "github"},
-		{identity.OpaqueConnectorConfig{Type: "custom"}, "custom"},
+		{axa.OIDCConnectorConfig{}, "oidc"},
+		{axa.SAMLConnectorConfig{}, "saml"},
+		{axa.LDAPConnectorConfig{}, "ldap"},
+		{axa.MicrosoftConnectorConfig{}, "microsoft"},
+		{axa.GitHubConnectorConfig{}, "github"},
+		{axa.OpaqueConnectorConfig{Type: "custom"}, "custom"},
 	}
 	for _, tc := range cases {
-		got := identity.ConnectorType(tc.cfg)
+		got := axa.ConnectorType(tc.cfg)
 		if got != tc.want {
 			t.Errorf("ConnectorType(%T) = %q, want %q", tc.cfg, got, tc.want)
 		}
@@ -27,7 +27,7 @@ func TestConnectorType(t *testing.T) {
 }
 
 func TestSecretRefZeroValue(t *testing.T) {
-	var ref identity.SecretRef
+	var ref axa.SecretRef
 	if ref.Namespace != "" || ref.Name != "" || ref.Key != "" {
 		t.Error("zero SecretRef should have empty fields")
 	}

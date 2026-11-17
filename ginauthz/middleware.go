@@ -21,7 +21,7 @@ const (
 	Unavailable
 )
 
-// Verdict's Reason is a plain string: identity/access owns the vocabulary and
+// Verdict's Reason is a plain string: axa/access owns the vocabulary and
 // this module depends on gin alone.
 type Verdict struct {
 	Decision Decision
@@ -136,7 +136,7 @@ func reasonOr(reason, fallback string) string {
 // orgIDSpec means "whichever org the caller is acting in".
 const orgIDSpec = "@org_id"
 
-// Copies of identity/access's reason codes (this module depends on gin alone).
+// Copies of axa/access's reason codes (this module depends on gin alone).
 // A code added there without a match here is one no client sees.
 const (
 	ReasonOK = "ok"

@@ -8,14 +8,14 @@ import (
 
 	"github.com/lib/pq"
 
-	"github.com/ArmornetIO/identity"
+	"github.com/ArmornetIO/axa"
 )
 
 // Two servers seeding one database: the loser of the serialization race runs
 // its seeder again; any other failure stops startup at once.
 func TestSeed_RetriesOnlyASerializationFailure(t *testing.T) {
 	calls := 0
-	racy := identity.Named("racy", func(context.Context, identity.Broker) error {
+	racy := axa.Named("racy", func(context.Context, axa.Broker) error {
 		calls++
 		if calls < 3 {
 			return fmt.Errorf("update client uploading: %w", &pq.Error{Code: "40001"})
@@ -27,7 +27,7 @@ func TestSeed_RetriesOnlyASerializationFailure(t *testing.T) {
 	}
 
 	calls = 0
-	broken := identity.Named("broken", func(context.Context, identity.Broker) error {
+	broken := axa.Named("broken", func(context.Context, axa.Broker) error {
 		calls++
 		return errors.New("bad config")
 	})

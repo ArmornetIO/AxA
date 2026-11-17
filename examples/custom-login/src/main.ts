@@ -1,6 +1,6 @@
 // A custom sign-in experience over identity's browser client.
 //
-// Everything that talks to the server comes from `identity` (identity/ts): the
+// Everything that talks to the server comes from `axa` (axa/ts): the
 // workspace lookup, the redirect out, the callback, the session. What is left
 // here is presentation — the part a product wants to own.
 import {
@@ -17,7 +17,7 @@ import {
   setSignInPaths,
   takeReturnTo,
   type ConnectorInfo,
-} from "identity";
+} from "axa";
 import { ConnectorPicker } from "./components/ConnectorPicker";
 import { SessionCard } from "./components/SessionCard";
 import { WorkspaceStep } from "./components/WorkspaceStep";

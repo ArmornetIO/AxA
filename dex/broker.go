@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/ArmornetIO/identity"
-	dexserver "github.com/ArmornetIO/identity/internal/dex/server"
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa"
+	dexserver "github.com/ArmornetIO/axa/internal/dex/server"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 )
 
@@ -56,14 +56,14 @@ func (b *broker) Handler() http.Handler {
 }
 
 // Connectors returns the ConnectorStore backed by Dex's K8s CRD storage.
-func (b *broker) Connectors() identity.ConnectorStore {
+func (b *broker) Connectors() axa.ConnectorStore {
 	b.mu.RLock()
 	defer b.mu.RUnlock()
 	return b.connectors
 }
 
 // Clients returns the ClientStore backed by Dex's K8s CRD storage.
-func (b *broker) Clients() identity.ClientStore {
+func (b *broker) Clients() axa.ClientStore {
 	b.mu.RLock()
 	defer b.mu.RUnlock()
 	return b.clients
@@ -77,4 +77,4 @@ func (b *broker) ready() bool {
 	return b.handler != nil
 }
 
-var _ identity.Broker = (*broker)(nil)
+var _ axa.Broker = (*broker)(nil)

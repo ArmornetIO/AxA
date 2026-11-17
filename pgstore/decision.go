@@ -7,21 +7,21 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ArmornetIO/identity"
-	"github.com/ArmornetIO/identity/access"
+	"github.com/ArmornetIO/axa"
+	"github.com/ArmornetIO/axa/access"
 )
 
 // DecisionStore keeps only lookup keys (subject, resource, outcome, time) clear
 // and seals the rest; a row still reveals that a decision happened.
 type DecisionStore struct {
 	db     *sql.DB
-	sealer identity.ConfigSealer
+	sealer axa.ConfigSealer
 	origin access.OriginSealer
 }
 
 // NewDecisionStore: a nil sealer stores plain JSON; a nil origin stores no
 // origin at all, NEVER a clear one.
-func NewDecisionStore(db *sql.DB, sealer identity.ConfigSealer, origin access.OriginSealer) *DecisionStore {
+func NewDecisionStore(db *sql.DB, sealer axa.ConfigSealer, origin access.OriginSealer) *DecisionStore {
 	return &DecisionStore{db: db, sealer: sealer, origin: origin}
 }
 

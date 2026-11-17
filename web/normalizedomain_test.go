@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/ArmornetIO/identity/web"
+	"github.com/ArmornetIO/axa/web"
 )
 
 func TestNormalizeDomain(t *testing.T) {

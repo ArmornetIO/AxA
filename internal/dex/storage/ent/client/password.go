@@ -4,8 +4,8 @@ import (
 	"context"
 	"strings"
 
-	"github.com/ArmornetIO/identity/internal/dex/storage"
-	"github.com/ArmornetIO/identity/internal/dex/storage/ent/db/password"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/storage/ent/db/password"
 )
 
 // CreatePassword saves provided password into the database.

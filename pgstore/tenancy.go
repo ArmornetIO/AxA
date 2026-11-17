@@ -6,7 +6,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ArmornetIO/identity/authn"
+	"github.com/lib/pq"
+
+	"github.com/ArmornetIO/axa/authn"
 )
 
 // UserStore implements authn.UserStore over the identity-owned `users` and
@@ -75,6 +77,42 @@ LEFT JOIN organization_users ou ON ou.user_id = u.id`
 	return scope, nil
 }
 
+// ResolveOrgScopes is ResolveOrgScope for many subjects in one query, for a
+// page listing many people. An unprovisioned subject is absent.
+func (s *UserStore) ResolveOrgScopes(ctx context.Context, subjects []string) (map[string]authn.OrgScope, error) {
+	const q = `
+SELECT u.subject, u.id, ou.org_id, ou.role
+FROM users u
+LEFT JOIN organization_users ou ON ou.user_id = u.id
+WHERE u.subject = ANY($1)`
+	rows, err := s.db.QueryContext(ctx, q, pq.Array(subjects))
+	if err != nil {
+		return nil, fmt.Errorf("pgstore: resolve org scopes: %w", err)
+	}
+	defer rows.Close()
+
+	out := map[string]authn.OrgScope{}
+	for rows.Next() {
+		var subject, id string
+		var orgID, role sql.NullString
+		if err := rows.Scan(&subject, &id, &orgID, &role); err != nil {
+			return nil, fmt.Errorf("pgstore: scan org scopes: %w", err)
+		}
+		scope, ok := out[subject]
+		if !ok {
+			scope = authn.OrgScope{UserID: id, Provisioned: true, Memberships: []authn.OrgMembership{}}
+		}
+		if orgID.Valid {
+			scope.Memberships = append(scope.Memberships, authn.OrgMembership{OrgID: orgID.String, Role: role.String})
+		}
+		out[subject] = scope
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("pgstore: resolve org scopes: %w", err)
+	}
+	return out, nil
+}
+
 func (s *UserStore) LinkOrgUser(ctx context.Context, orgID, userID, role string) error {
 	const q = `
 INSERT INTO organization_users (org_id, user_id, role, created_at)
@@ -141,6 +179,28 @@ func (s *OrgStore) GetOrg(ctx context.Context, id string) (authn.Organization, e
 		return authn.Organization{}, fmt.Errorf("pgstore: get org: %w", err)
 	}
 	return org, nil
+}
+
+// GetOrgs reads every org in ids in one query, in no particular order; an id
+// with no org is absent.
+func (s *OrgStore) GetOrgs(ctx context.Context, ids []string) ([]authn.Organization, error) {
+	rows, err := s.db.QueryContext(ctx, `SELECT id, name, slug FROM organizations WHERE id = ANY($1)`, pq.Array(ids))
+	if err != nil {
+		return nil, fmt.Errorf("pgstore: get orgs: %w", err)
+	}
+	defer rows.Close()
+	var out []authn.Organization
+	for rows.Next() {
+		var org authn.Organization
+		if err := rows.Scan(&org.ID, &org.Name, &org.Slug); err != nil {
+			return nil, fmt.Errorf("pgstore: scan orgs: %w", err)
+		}
+		out = append(out, org)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("pgstore: get orgs: %w", err)
+	}
+	return out, nil
 }
 
 func (s *OrgStore) OrgExists(ctx context.Context, id string) (bool, error) {

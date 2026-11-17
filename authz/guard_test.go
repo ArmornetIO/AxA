@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-const self = "github.com/ArmornetIO/identity/authz"
+const self = "github.com/ArmornetIO/axa/authz"
 
 // TestModuleGuard keeps identity and armornet out, tests included: a test import
 // still drags its module into go.sum.
@@ -78,7 +78,7 @@ func TestImportAllowedRule(t *testing.T) {
 		{"abac", self + "/rbac", true, true},
 		{"abac", self + "/rbac", false, false},
 		{"model", "github.com/stretchr/testify/require", true, false},
-		{"model", "github.com/ArmornetIO/identity/access", false, false},
+		{"model", "github.com/ArmornetIO/axa/access", false, false},
 	} {
 		if got := importAllowed(tc.pkg, tc.imp, tc.test); got != tc.want {
 			t.Errorf("importAllowed(%q, %q, test=%v) = %v, want %v", tc.pkg, tc.imp, tc.test, got, tc.want)

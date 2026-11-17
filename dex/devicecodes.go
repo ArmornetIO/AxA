@@ -7,17 +7,17 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/ArmornetIO/identity"
-	"github.com/ArmornetIO/identity/authn"
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
-	entclient "github.com/ArmornetIO/identity/internal/dex/storage/ent/client"
+	"github.com/ArmornetIO/axa"
+	"github.com/ArmornetIO/axa/authn"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
+	entclient "github.com/ArmornetIO/axa/internal/dex/storage/ent/client"
 )
 
 // deviceCodeStore keeps device codes (bearer credentials, raw upstream) out of
 // the DB: requests' copy SEALED (must come back), tokens' HASHED (lookup key).
 type deviceCodeStore struct {
 	dexstorage.Storage
-	sealer identity.ConfigSealer
+	sealer axa.ConfigSealer
 	// gated grants a code only to its approver (deviceapproval.go).
 	gated bool
 }

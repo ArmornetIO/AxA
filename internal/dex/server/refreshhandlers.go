@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector"
-	"github.com/ArmornetIO/identity/internal/dex/server/internal"
-	"github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa/internal/dex/connector"
+	"github.com/ArmornetIO/axa/internal/dex/server/internal"
+	"github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 type RefreshTokenPolicy struct {

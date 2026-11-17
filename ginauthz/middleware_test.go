@@ -11,7 +11,7 @@ import (
 )
 
 // These test translation only (request → question, verdict → response); what
-// each condition decides is tested in identity/access.
+// each condition decides is tested in axa/access.
 
 type fakePolicy struct {
 	rule Rule

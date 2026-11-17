@@ -10,7 +10,7 @@ import (
 
 	openfgav1 "github.com/openfga/api/proto/openfga/v1"
 
-	"github.com/ArmornetIO/identity/authz/internal/fgatest"
+	"github.com/ArmornetIO/axa/authz/internal/fgatest"
 )
 
 //go:embed testdata/s1.fga

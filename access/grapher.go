@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/ArmornetIO/identity/authz"
+	"github.com/ArmornetIO/axa/authz"
 )
 
 // RelationChecker is the one checker method the graph axis needs;

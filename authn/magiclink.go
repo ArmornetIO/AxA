@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ArmornetIO/identity/authn/secrethash"
+	"github.com/ArmornetIO/axa/authn/secrethash"
 )
 
 // ErrMagicLinkInvalid is every failure alike, so a redeemer can't enumerate.

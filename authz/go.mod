@@ -1,4 +1,4 @@
-module github.com/ArmornetIO/identity/authz
+module github.com/ArmornetIO/axa/authz
 
 go 1.27.4
 

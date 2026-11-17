@@ -1,6 +1,6 @@
 package access
 
-import "github.com/ArmornetIO/identity/authz"
+import "github.com/ArmornetIO/axa/authz"
 
 // Kind is what sort of caller a Subject is. The set is closed: a third kind is
 // a model change, not a new string someone passes through.

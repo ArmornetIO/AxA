@@ -14,10 +14,10 @@ import (
 	otellog "go.opentelemetry.io/otel/log"
 	lognoop "go.opentelemetry.io/otel/log/noop"
 
-	"github.com/ArmornetIO/identity"
-	"github.com/ArmornetIO/identity/authz"
-	"github.com/ArmornetIO/identity/dex"
-	"github.com/ArmornetIO/identity/fga"
+	"github.com/ArmornetIO/axa"
+	"github.com/ArmornetIO/axa/authz"
+	"github.com/ArmornetIO/axa/dex"
+	"github.com/ArmornetIO/axa/fga"
 	health "github.com/ArmornetIO/ota/health"
 )
 
@@ -178,7 +178,7 @@ func (s *Server) Stop(ctx context.Context) error {
 }
 
 // Broker is usable right after New; it answers 503 until Start initialises Dex.
-func (s *Server) Broker() identity.Broker { return s.dex.Broker() }
+func (s *Server) Broker() axa.Broker { return s.dex.Broker() }
 
 func (s *Server) Checker() *authz.Checker { return s.checker }
 

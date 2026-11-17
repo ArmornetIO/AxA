@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ArmornetIO/identity/authn"
+	"github.com/ArmornetIO/axa/authn"
 )
 
 // SessionStore finds rows by token SHA-256, so a DB read yields no credential.

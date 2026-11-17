@@ -13,12 +13,12 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/ArmornetIO/identity/authz"
-	"github.com/ArmornetIO/identity/authz/authztest"
-	"github.com/ArmornetIO/identity/authz/cbac"
-	"github.com/ArmornetIO/identity/authz/mac"
-	"github.com/ArmornetIO/identity/authz/model"
-	"github.com/ArmornetIO/identity/authz/rbac"
+	"github.com/ArmornetIO/axa/authz"
+	"github.com/ArmornetIO/axa/authz/authztest"
+	"github.com/ArmornetIO/axa/authz/cbac"
+	"github.com/ArmornetIO/axa/authz/mac"
+	"github.com/ArmornetIO/axa/authz/model"
+	"github.com/ArmornetIO/axa/authz/rbac"
 )
 
 const (
@@ -103,7 +103,7 @@ func TestMACReference(t *testing.T) {
 	}
 }
 
-// identity/access implements authz.Authorizer; authztest.Fixed does here.
+// axa/access implements authz.Authorizer; authztest.Fixed does here.
 type DocHandler struct{ az authz.Authorizer }
 
 func (s *DocHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {

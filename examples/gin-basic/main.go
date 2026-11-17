@@ -1,4 +1,4 @@
-// gin-basic puts a Gin API behind identity's browser sign-in: Dex, identity/web
+// gin-basic puts a Gin API behind identity's browser sign-in: Dex, axa/web
 // and the API in one process, with Dex's mock connector as the IdP.
 package main
 
@@ -19,12 +19,12 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 
-	"github.com/ArmornetIO/identity"
-	"github.com/ArmornetIO/identity/authn"
-	"github.com/ArmornetIO/identity/dex"
-	"github.com/ArmornetIO/identity/pgstore"
-	"github.com/ArmornetIO/identity/service"
-	"github.com/ArmornetIO/identity/web"
+	"github.com/ArmornetIO/axa"
+	"github.com/ArmornetIO/axa/authn"
+	"github.com/ArmornetIO/axa/dex"
+	"github.com/ArmornetIO/axa/pgstore"
+	"github.com/ArmornetIO/axa/service"
+	"github.com/ArmornetIO/axa/web"
 )
 
 const (
@@ -76,7 +76,7 @@ func run(ctx context.Context, stop context.CancelFunc) error {
 		Dex: dex.Config{
 			IssuerURL:   issuer,
 			DatabaseURL: dsn,
-			Seeders:     []identity.StartupSeeder{seed{redirect: base + "/callback"}},
+			Seeders:     []axa.StartupSeeder{seed{redirect: base + "/callback"}},
 		},
 		Health: service.HealthConfig{Disabled: true},
 	})
@@ -114,7 +114,7 @@ func run(ctx context.Context, stop context.CancelFunc) error {
 	page := func(c *gin.Context) { c.Data(http.StatusOK, "text/html; charset=utf-8", indexHTML) }
 	r.GET("/", page)
 	r.GET("/callback", page)
-	// identity/ts's resolveSlug lookup. Public: it runs before anyone signs in.
+	// axa/ts's resolveSlug lookup. Public: it runs before anyone signs in.
 	r.GET("/api/orgs/:slug/connectors", func(c *gin.Context) {
 		id, conns, err := orgs.ResolveSlug(c.Request.Context(), c.Param("slug"))
 		if errors.Is(err, authn.ErrNoOrg) {
@@ -156,7 +156,7 @@ func run(ctx context.Context, stop context.CancelFunc) error {
 	return nil
 }
 
-// mountAuth translates identity/web's {name} patterns to gin's :name and fills
+// mountAuth translates axa/web's {name} patterns to gin's :name and fills
 // r.PathValue, which gin does not.
 func mountAuth(r gin.IRoutes, auth *web.Handlers) {
 	for _, rt := range auth.Routes() {
@@ -201,17 +201,17 @@ type seed struct{ redirect string }
 
 func (seed) Name() string { return "gin-basic" }
 
-func (s seed) Seed(ctx context.Context, b identity.Broker) error {
-	err := b.Connectors().Create(ctx, identity.Connector{
+func (s seed) Seed(ctx context.Context, b axa.Broker) error {
+	err := b.Connectors().Create(ctx, axa.Connector{
 		ID:     connectorID,
 		Name:   "Mock (signs you in as a test user)",
-		Config: identity.OpaqueConnectorConfig{Type: "mockCallback", RawConfig: json.RawMessage(`{}`)},
+		Config: axa.OpaqueConnectorConfig{Type: "mockCallback", RawConfig: json.RawMessage(`{}`)},
 	})
-	if err != nil && !errors.Is(err, identity.ErrConnectorExists) {
+	if err != nil && !errors.Is(err, axa.ErrConnectorExists) {
 		return err
 	}
-	client := identity.Client{ID: clientID, Name: "gin-basic", RedirectURIs: []string{s.redirect}, Public: true}
-	if _, err = b.Clients().Create(ctx, client); errors.Is(err, identity.ErrClientExists) {
+	client := axa.Client{ID: clientID, Name: "gin-basic", RedirectURIs: []string{s.redirect}, Public: true}
+	if _, err = b.Clients().Create(ctx, client); errors.Is(err, axa.ErrClientExists) {
 		// BASE_URL may have changed since the client was made.
 		err = b.Clients().Update(ctx, client)
 	}

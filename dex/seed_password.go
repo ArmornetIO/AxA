@@ -5,15 +5,15 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/ArmornetIO/identity"
-	dexstorage "github.com/ArmornetIO/identity/internal/dex/storage"
+	"github.com/ArmornetIO/axa"
+	dexstorage "github.com/ArmornetIO/axa/internal/dex/storage"
 )
 
 // SeedPassword writes one account for Dex's "local" password connector. The
 // username doubles as the stable user ID, so a changed hash keeps the same
 // subject and the account keeps its memberships.
-func SeedPassword(username string, bcryptHash []byte) identity.SeedFunc {
-	return func(ctx context.Context, b identity.Broker) error {
+func SeedPassword(username string, bcryptHash []byte) axa.SeedFunc {
+	return func(ctx context.Context, b axa.Broker) error {
 		bk, ok := b.(*broker)
 		if !ok {
 			return fmt.Errorf("dex: SeedPassword requires *broker, got %T", b)

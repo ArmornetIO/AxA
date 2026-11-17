@@ -16,7 +16,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ArmornetIO/identity/internal/dex/connector"
+	"github.com/ArmornetIO/axa/internal/dex/connector"
 )
 
 func readValidRootCAData(t *testing.T) []byte {

@@ -7,8 +7,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/ArmornetIO/identity/authn"
-	"github.com/ArmornetIO/identity/authn/secrethash"
+	"github.com/ArmornetIO/axa/authn"
+	"github.com/ArmornetIO/axa/authn/secrethash"
 )
 
 // fakeLookup is an in-memory PATLookup keyed by stored prefix; it also records

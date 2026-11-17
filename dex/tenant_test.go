@@ -18,8 +18,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ArmornetIO/identity"
-	"github.com/ArmornetIO/identity/internal/dex/connector/saml"
+	"github.com/ArmornetIO/axa"
+	"github.com/ArmornetIO/axa/internal/dex/connector/saml"
 )
 
 func testCertPEM(t *testing.T) string {
@@ -162,9 +162,9 @@ func TestPrepareTenantConnector_OIDC(t *testing.T) {
 // The typed path must produce a config Dex actually opens; before the fix it
 // never could (missing required fields, PEM where Dex decodes base64).
 func TestMarshalConnectorConfig_SAMLOpens(t *testing.T) {
-	cfg := identity.SAMLConnectorConfig{
+	cfg := axa.SAMLConnectorConfig{
 		SSOURL:       "https://idp.example.com/sso",
-		CARef:        identity.SecretRef{Namespace: "ns", Name: "idp", Key: "ca.pem"},
+		CARef:        axa.SecretRef{Namespace: "ns", Name: "idp", Key: "ca.pem"},
 		UsernameAttr: "name",
 		EmailAttr:    "email",
 		RedirectURI:  "https://auth.example.com/dex/callback",
