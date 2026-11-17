@@ -28,8 +28,7 @@ package globals.
 - `.`, `authn`, `authz`, `ginauthz` and `examples/gin-basic` each have their
   own `go.mod`: test each separately. A new nested module needs a `replace` in
   this `go.mod` and `examples/gin-basic`'s, and a line in CI, or its tests
-  silently stop running. Inside the armornet tree it also needs a `replace` in
-  armornet's root `go.mod` and a line in its Makefile's `test-go-identity`.
+  silently stop running.
 - The LDAP connector tests need `DEX_LDAP_HOST` and skip without it.
 - Dex's test certificates under `internal/dex/**/testdata` are upstream's public
   fixtures, not secrets.
